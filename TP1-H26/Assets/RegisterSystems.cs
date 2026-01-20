@@ -10,7 +10,6 @@ public class RegisterSystems
 
         var toRegister = new List<ISystem>();
         // Add your systems here
-        toRegister.Add(new CirclesManagement());
 
         // Creating components from config
         for (uint i = 0; i < config.Count; i++)
@@ -19,6 +18,7 @@ public class RegisterSystems
             InitialVelocity.initialVelocities.Add(i, config[(int)i].initialVelocity);
             InitialSizes.initialSizes.Add(i, config[(int)i].initialSize);
         }
+        toRegister.Add(new CirclesManagement());
 
 
         return toRegister;
