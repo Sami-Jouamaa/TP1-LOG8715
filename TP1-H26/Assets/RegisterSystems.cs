@@ -21,6 +21,8 @@ public class RegisterSystems
         }
         toRegister.Add(new CirclesManagement());
         toRegister.Add(new PositionsManagement());
+        toRegister.Add(new BehaviorManagement());
+
 
 
         return toRegister;

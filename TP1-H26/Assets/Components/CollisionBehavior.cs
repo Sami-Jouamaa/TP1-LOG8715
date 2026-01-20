@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 
-public class State
+public class CollisionBehavior
 {  
-    public enum CircleState
+    public enum Behavior
     {
         Static,
         Dynamic,
         Protected
     }
-    public static Dictionary<uint, CircleState> sizes = new Dictionary<uint, CircleState>();
+    public static Dictionary<uint, Behavior> behaviors = new Dictionary<uint, Behavior>();
     
 }
