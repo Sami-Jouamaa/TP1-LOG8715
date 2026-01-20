@@ -19,6 +19,7 @@ public class RegisterSystems
             InitialSizes.initialSizes.Add(i, config[(int)i].initialSize);
         }
         toRegister.Add(new CirclesManagement());
+        toRegister.Add(new PositionsManagement());
 
 
         return toRegister;
