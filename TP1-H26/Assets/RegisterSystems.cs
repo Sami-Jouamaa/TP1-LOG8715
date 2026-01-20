@@ -18,9 +18,12 @@ public class RegisterSystems
             Velocities.velocities.Add(i, config[(int)i].initialVelocity);
             Sizes.sizes.Add(i, config[(int)i].initialSize);
             CollisionCount.collisionCount.Add(i, 0);
+            CollisionBehavior.behaviors.Add(i, Behavior.Dynamic);
+            ProtectedTime.protectedTime.Add(i, 0);
         }
         toRegister.Add(new CirclesManagement());
         toRegister.Add(new PositionsManagement());
+        toRegister.Add(new CollisionManagement());
         toRegister.Add(new BehaviorManagement());
 
 

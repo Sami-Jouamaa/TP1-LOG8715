@@ -4,18 +4,18 @@ public class BehaviorManagement : ISystem
 {
     public ECSController controller = ECSController.Instance;
 
-    public string Name => throw new System.NotImplementedException();
+    public string Name => "BehaviorManagement";
 
     public void UpdateSystem()
     {
         for (uint i = 0; i < Sizes.sizes.Count; i++)
         {
-
-            if (CollisionCount.collisionCount[i] == controller.Config.protectionCollisionCount)
-            {
-                CollisionBehavior.behaviors[i] = Behavior.Protected;
-            }
-
+            int size = Sizes.sizes[i];
+            int collisionCount = CollisionCount.collisionCount[i];
+            // if (collisionCount == controller.Config.protectionCollisionCount & size <= controller.Config.protectionSize)
+            // {
+            //     #CollisionBehavior.behaviors[i] = Behavior.Protected;
+            // }
         }
     }
 }
