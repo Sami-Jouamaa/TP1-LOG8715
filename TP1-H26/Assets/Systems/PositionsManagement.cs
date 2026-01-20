@@ -20,8 +20,8 @@ public class PositionsManagement : ISystem
             }
             else
             {
-                newX = InitialVelocity.initialVelocities[i].x + Positions.circlePositions[i].x;
-                newY = InitialVelocity.initialVelocities[i].y + Positions.circlePositions[i].y;
+                newX = Velocities.velocities[i].x + Positions.circlePositions[i].x;
+                newY = Velocities.velocities[i].y + Positions.circlePositions[i].y;
             }
             Vector2 newPosition = new Vector2(newX, newY);
             Positions.circlePositions[i] = newPosition;

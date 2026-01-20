@@ -11,9 +11,9 @@ public class CirclesManagement : ISystem
     {
         if (firstTimeRunning)
         {
-            for (uint i = 0; i < InitialSizes.initialSizes.Count; i++)
+            for (uint i = 0; i < Sizes.sizes.Count; i++)
             {
-                controller.CreateShape(i, InitialSizes.initialSizes[i]);
+                controller.CreateShape(i, Sizes.sizes[i]);
             }
             firstTimeRunning = false;
         }

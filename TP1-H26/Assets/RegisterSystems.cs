@@ -15,8 +15,9 @@ public class RegisterSystems
         for (uint i = 0; i < config.Count; i++)
         {
             Positions.circlePositions.Add(i, config[(int)i].initialPosition);
-            InitialVelocity.initialVelocities.Add(i, config[(int)i].initialVelocity);
-            InitialSizes.initialSizes.Add(i, config[(int)i].initialSize);
+            Velocities.velocities.Add(i, config[(int)i].initialVelocity);
+            Sizes.sizes.Add(i, config[(int)i].initialSize);
+            CollisionCount.collisionCount.Add(i, 0);
         }
         toRegister.Add(new CirclesManagement());
         toRegister.Add(new PositionsManagement());
