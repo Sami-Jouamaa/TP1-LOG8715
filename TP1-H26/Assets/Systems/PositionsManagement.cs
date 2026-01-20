@@ -10,20 +10,21 @@ public class PositionsManagement : ISystem
     {
         for (uint i = 0; i < Positions.circlePositions.Count; i++)
         {
-            int newX;
-            int newY;
+            float newX;
+            float newY;
             if (firstTime)
             {
-                newX = (int)Positions.circlePositions[i].x;
-                newY = (int)Positions.circlePositions[i].y;
+                newX = Positions.circlePositions[i].x;
+                newY = Positions.circlePositions[i].y;
                 firstTime = false;
             }
             else
             {
-                newX = (int)(InitialVelocity.initialVelocities[i].x + Positions.circlePositions[i].x);
-                newY = (int)(InitialVelocity.initialVelocities[i].y + Positions.circlePositions[i].y);
+                newX = InitialVelocity.initialVelocities[i].x + Positions.circlePositions[i].x;
+                newY = InitialVelocity.initialVelocities[i].y + Positions.circlePositions[i].y;
             }
             Vector2 newPosition = new Vector2(newX, newY);
+            Positions.circlePositions[i] = newPosition;
             controller.UpdateShapePosition(i, newPosition);
         }
     }
