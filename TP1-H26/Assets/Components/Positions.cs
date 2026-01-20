@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Positions
 {
-    public static Dictionary<int, Vector2> circlePositions = new Dictionary<int, Vector2>();
+    public static Dictionary<uint, Vector2> circlePositions = new Dictionary<uint, Vector2>();
 }

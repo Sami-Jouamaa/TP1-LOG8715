@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class InitialVelocity
 {
-    public static Dictionary<int, Vector2> initialVelocities = new Dictionary<int, Vector2>();
+    public static Dictionary<uint, Vector2> initialVelocities = new Dictionary<uint, Vector2>();
 }
