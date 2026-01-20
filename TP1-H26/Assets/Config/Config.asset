@@ -19,12 +19,14 @@ MonoBehaviour:
   protectionCooldown: 15
   circleInstancesToSpawn:
   - initialSize: 5
-    initialPosition: {x: -1, y: 4}
-    initialVelocity: {x: 2, y: 1}
+    initialPosition: {x: 0, y: 0}
+    initialVelocity: {x: 0.01, y: 0}
   - initialSize: 2
     initialPosition: {x: 2, y: 1}
-    initialVelocity: {x: 1, y: 3}
+    initialVelocity: {x: -0.01, y: 0}
   systemsEnabled:
     keys:
     - CirclesManagement
-    values: 01
+    - PositionsManagement
+    - CollisionManagement
+    values: 010101

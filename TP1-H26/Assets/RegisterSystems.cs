@@ -18,7 +18,14 @@ public class RegisterSystems
             Velocities.velocities.Add(i, config[(int)i].initialVelocity);
             Sizes.sizes.Add(i, config[(int)i].initialSize);
             CollisionCount.collisionCount.Add(i, 0);
-            CollisionBehavior.behaviors.Add(i, Behavior.Dynamic);
+            if (Velocities.velocities[i].x == 0 && Velocities.velocities[i].y == 0)
+            {
+                CollisionBehavior.behaviors.Add(i, Behavior.Static);
+            }
+            else
+            {
+                CollisionBehavior.behaviors.Add(i, Behavior.Dynamic);
+            }
             ProtectedTime.protectedTime.Add(i, 0);
         }
         toRegister.Add(new CirclesManagement());
