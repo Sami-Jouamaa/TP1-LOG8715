@@ -18,15 +18,16 @@ MonoBehaviour:
   protectionDuration: 5
   protectionCooldown: 15
   circleInstancesToSpawn:
-  - initialSize: 5
+  - initialSize: 3
     initialPosition: {x: 0, y: 0}
-    initialVelocity: {x: 0.01, y: 0}
-  - initialSize: 2
-    initialPosition: {x: 2, y: 1}
+    initialVelocity: {x: 0.03, y: 0}
+  - initialSize: 3
+    initialPosition: {x: -5, y: 0}
     initialVelocity: {x: -0.01, y: 0}
   systemsEnabled:
     keys:
     - CirclesManagement
     - PositionsManagement
     - CollisionManagement
-    values: 010101
+    - BehaviorManagement
+    values: 01010101
