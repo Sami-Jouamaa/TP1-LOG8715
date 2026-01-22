@@ -26,12 +26,12 @@ public class RegisterSystems
             {
                 CollisionBehavior.behaviors.Add(i, Behavior.Dynamic);
             }
-            ProtectedTime.protectedTime.Add(i, 0);
         }
         toRegister.Add(new CirclesManagement());
         toRegister.Add(new PositionsManagement());
         toRegister.Add(new CollisionManagement());
-        toRegister.Add(new BehaviorManagement());
+        toRegister.Add(new ProtectionTickManagement());
+        toRegister.Add(new ProtectionStartManagement());
 
 
 
