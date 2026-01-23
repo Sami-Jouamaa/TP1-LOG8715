@@ -1,7 +1,5 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 
 public class ProtectionTickManagement : ISystem
 {

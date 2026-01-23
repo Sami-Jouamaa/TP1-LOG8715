@@ -1,23 +1,19 @@
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using NUnit.Framework;
-
 public class ProtectionStartManagement : ISystem
 {
     public ECSController controller = ECSController.Instance;
     public string Name => "ProtectionStartManagement";
     public void UpdateSystem()
     {
+        Config config = controller.Config;
         foreach (var (id, size) in Sizes.sizes) {
-            if (size > controller.Config.protectionSize) 
+            if (size > config.protectionSize) 
                 continue;
-            if (CollisionCount.collisionCount[id] < controller.Config.protectionCollisionCount) 
+            if (CollisionCount.collisionCount[id] < config.protectionCollisionCount) 
                 continue;
             if (Protections.protections.ContainsKey(id)) 
                 continue;
 
-            Protections.protections.Add(id, new ProtectionTimers{Remaining = controller.Config.protectionDuration, Cooldown = controller.Config.protectionCooldown});
+            Protections.protections.Add(id, new ProtectionTimers{Remaining = config.protectionDuration, Cooldown = config.protectionCooldown});
         }
     }
 }

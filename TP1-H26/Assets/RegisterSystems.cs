@@ -32,6 +32,8 @@ public class RegisterSystems
         toRegister.Add(new CollisionManagement());
         toRegister.Add(new ProtectionTickManagement());
         toRegister.Add(new ProtectionStartManagement());
+        toRegister.Add(new ColorSetManagement());
+        toRegister.Add(new ColorDisplayManagement());
 
 
 
