@@ -1,6 +1,6 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using System;
 
 public class CollisionManagement : ISystem
 {
@@ -43,8 +43,7 @@ public class CollisionManagement : ISystem
                 // Collision with other circle
                 float xDifference = Mathf.Pow(positionDictionary[i].x - positionDictionary[j].x, 2);
                 float yDifference = Mathf.Pow(positionDictionary[i].y - positionDictionary[j].y, 2);
-                float radiiSum = Mathf.Pow(sizesDictionary[i] / 2 + sizesDictionary[j] / 2, 2);
-
+                float radiiSum = Mathf.Pow(((float)sizesDictionary[i] / 2) + (float)(sizesDictionary[j] / 2), 2);
                 if (xDifference + yDifference <= radiiSum)
                 {
                     if (CollisionBehavior.behaviors[i] == Behavior.Dynamic && CollisionBehavior.behaviors[j] == Behavior.Dynamic)
