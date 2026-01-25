@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using UnityEngine;
 
 public class CollisionDetection : ISystem
@@ -16,10 +15,11 @@ public class CollisionDetection : ISystem
             float currentY = Positions.circlePositions[i].y;
             float radius = Sizes.sizes[i] / 2;
 
-            float fov = Camera.main.fieldOfView;
-            float maxX = fov / 2 + 1;
+            float fov = Camera.main.orthographicSize;
+            
+            float maxX = fov*2 + 1;
             float minX = maxX * -1;
-            float maxY = fov / 4;
+            float maxY = fov;
             float minY = maxY * -1;
 
             Vector2 currentVel = Velocities.velocities[i];
