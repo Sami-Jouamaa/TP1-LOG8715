@@ -35,8 +35,6 @@ public class RegisterSystems
         toRegister.Add(new ColorSetManagement());
         toRegister.Add(new ColorDisplayManagement());
 
-
-
         return toRegister;
     }
 }
