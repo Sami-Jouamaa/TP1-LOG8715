@@ -29,11 +29,13 @@ public class RegisterSystems
         }
         toRegister.Add(new CirclesManagement());
         toRegister.Add(new PositionsManagement());
-        toRegister.Add(new CollisionManagement());
+        toRegister.Add(new CollisionDetection());
         toRegister.Add(new ProtectionTickManagement());
         toRegister.Add(new ProtectionStartManagement());
         toRegister.Add(new ColorSetManagement());
         toRegister.Add(new ColorDisplayManagement());
+        toRegister.Add(new CollisionManagement());
+
 
         return toRegister;
     }
