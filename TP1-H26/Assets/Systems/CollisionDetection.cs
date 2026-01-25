@@ -1,12 +1,12 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
-public class CollisionDetection: ISystem
+public class CollisionDetection : ISystem
 {
     public ECSController controller = ECSController.Instance;
 
     public string Name => "CollisionManagement";
-
     public void UpdateSystem()
     {
         for (uint i = 0; i < Positions.circlePositions.Count; i++)
@@ -16,19 +16,21 @@ public class CollisionDetection: ISystem
             float currentY = Positions.circlePositions[i].y;
             float radius = Sizes.sizes[i] / 2;
 
-            // Based on fov, i think
-            float maxY = 15;
-            float minY = -15;
-            float maxX = 31;
-            float minX = -31;
-            
+            float fov = Camera.main.fieldOfView;
+            float maxX = fov / 2 + 1;
+            float minX = maxX * -1;
+            float maxY = fov / 4;
+            float minY = maxY * -1;
 
             Vector2 currentVel = Velocities.velocities[i];
             if (currentX + radius >= maxX || currentX - radius <= minX)
             {
                 currentVel.x *= -1;
                 Velocities.velocities[i] = currentVel;
-                CollisionPair.CollisionPairs.Add(i, -1);
+                if (!CollisionPair.CollisionPairs.ContainsKey(i))
+                {
+                    CollisionPair.CollisionPairs.Add(i, -1);
+                }
             }
             if (currentY + radius >= maxY || currentY - radius <= minY)
             {
@@ -48,7 +50,10 @@ public class CollisionDetection: ISystem
                 float radiiSum = Mathf.Pow(((float)Sizes.sizes[i] / 2) + ((float)Sizes.sizes[j] / 2), 2);
                 if (xDifference + yDifference <= radiiSum)
                 {
-                    CollisionPair.CollisionPairs.Add(i,(int)j);
+                    if (CollisionPair.CollisionPairs.ContainsKey(i)) continue;
+                    if (CollisionPair.CollisionPairs.ContainsKey(j)) continue;
+                    CollisionPair.CollisionPairs.Add(i, (int)j);
+                    CollisionPair.CollisionPairs.Add(j, (int)i);
                 }
             }
         }

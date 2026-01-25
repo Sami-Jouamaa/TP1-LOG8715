@@ -19,10 +19,10 @@ MonoBehaviour:
   protectionCooldown: 15
   circleInstancesToSpawn:
   - initialSize: 3
-    initialPosition: {x: 2, y: 2}
+    initialPosition: {x: 0, y: 0}
     initialVelocity: {x: 0.03, y: 0}
   - initialSize: 3
-    initialPosition: {x: -5, y: 0}
+    initialPosition: {x: 5, y: 0}
     initialVelocity: {x: -0.01, y: 0}
   systemsEnabled:
     keys:
@@ -32,4 +32,6 @@ MonoBehaviour:
     - BehaviorManagement
     - ProtectionTickManagement
     - ProtectionStartManagement
-    values: 010101010101
+    - ColorSetManagement
+    - ColorDisplayManagement
+    values: 0101010101010101
