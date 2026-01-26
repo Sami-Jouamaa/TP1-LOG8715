@@ -1,11 +1,17 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CollisionDetection : ISystem
 {
     public ECSController controller = ECSController.Instance;
 
-    public string Name => "CollisionManagement";
+    public string Name => "CollisionDetection";
+    void collide(uint a, int b = -1)
+    {
+        List<int> list = CollisionPair.collisionPairs.ContainsKey(a) ? CollisionPair.collisionPairs[a] : new();
+        list.Add(b);
+        CollisionPair.collisionPairs[a] = list;
+    }
     public void UpdateSystem()
     {
         for (uint i = 0; i < Positions.circlePositions.Count; i++)
@@ -27,19 +33,13 @@ public class CollisionDetection : ISystem
             {
                 currentVel.x *= -1;
                 Velocities.velocities[i] = currentVel;
-                if (!CollisionPair.CollisionPairs.ContainsKey(i))
-                {
-                    CollisionPair.CollisionPairs.Add(i, -1);
-                }
+                collide(i);
             }
             if (currentY + radius >= maxY || currentY - radius <= minY)
             {
                 currentVel.y *= -1;
                 Velocities.velocities[i] = currentVel;
-                if (!CollisionPair.CollisionPairs.ContainsKey(i))
-                {
-                    CollisionPair.CollisionPairs.Add(i, -1);
-                }
+                collide(i);
             }
 
             for (uint j = i + 1; j < Positions.circlePositions.Count; j++)
@@ -50,10 +50,8 @@ public class CollisionDetection : ISystem
                 float radiiSum = Mathf.Pow(((float)Sizes.sizes[i] / 2) + ((float)Sizes.sizes[j] / 2), 2);
                 if (xDifference + yDifference <= radiiSum)
                 {
-                    if (CollisionPair.CollisionPairs.ContainsKey(i)) continue;
-                    if (CollisionPair.CollisionPairs.ContainsKey(j)) continue;
-                    CollisionPair.CollisionPairs.Add(i, (int)j);
-                    CollisionPair.CollisionPairs.Add(j, (int)i);
+                    collide(i,(int)j);
+                    collide(j,(int)i);
                 }
             }
         }
