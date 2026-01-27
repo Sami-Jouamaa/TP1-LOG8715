@@ -35,6 +35,7 @@ public class RegisterSystems
         toRegister.Add(new ColorSetManagement());
         toRegister.Add(new ColorDisplayManagement());
         toRegister.Add(new CollisionManagement());
+        toRegister.Add(new SizeManagement());
 
         return toRegister;
     }

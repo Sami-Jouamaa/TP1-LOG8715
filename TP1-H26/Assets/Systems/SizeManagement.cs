@@ -21,7 +21,14 @@ public class SizeManagement : ISystem
         foreach(var id in disappeared)
         {
             controller.DestroyShape(id);
+            Positions.circlePositions.Remove(id);
+            Velocities.velocities.Remove(id);
+            Sizes.sizes.Remove(id);
+            Colors.colors.Remove(id);
+            Protections.protections.Remove(id);
+            CollisionPair.collisionPairs.Remove(id);
         }
+        disappeared.Clear();
     }
 }
 
