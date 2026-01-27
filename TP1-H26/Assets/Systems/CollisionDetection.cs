@@ -6,52 +6,47 @@ public class CollisionDetection : ISystem
     public ECSController controller = ECSController.Instance;
 
     public string Name => "CollisionDetection";
-    void collide(uint a, int b = -1)
+    static void collide(uint a, int b)
     {
         List<int> list = CollisionPair.collisionPairs.ContainsKey(a) ? CollisionPair.collisionPairs[a] : new();
         list.Add(b);
         CollisionPair.collisionPairs[a] = list;
     }
+    static void wallHit(uint id, WallOrientation wall)
+    {
+        collide(id, -(int)wall);
+    }
     public void UpdateSystem()
     {
-        for (uint i = 0; i < Positions.circlePositions.Count; i++)
+        foreach (var (id, position) in Positions.circlePositions )
         {
             // Collision with screen border
-            float currentX = Positions.circlePositions[i].x;
-            float currentY = Positions.circlePositions[i].y;
-            float radius = Sizes.sizes[i] / 2;
+            float currentX = position.x;
+            float currentY = position.y;
+            float radius = (float)Sizes.sizes[id] / 2;
 
             float fov = Camera.main.orthographicSize;
             
             float maxX = fov*2 + 1;
             float minX = maxX * -1;
             float maxY = fov;
-            float minY = maxY * -1;
-
-            Vector2 currentVel = Velocities.velocities[i];
+            float minY = maxY * -1; 
             if (currentX + radius >= maxX || currentX - radius <= minX)
-            {
-                currentVel.x *= -1;
-                Velocities.velocities[i] = currentVel;
-                collide(i);
-            }
+                wallHit(id, WallOrientation.Vertical);
             if (currentY + radius >= maxY || currentY - radius <= minY)
-            {
-                currentVel.y *= -1;
-                Velocities.velocities[i] = currentVel;
-                collide(i);
-            }
+                wallHit(id, WallOrientation.Horizontal);
 
-            for (uint j = i + 1; j < Positions.circlePositions.Count; j++)
+            foreach (var (secondId, secondPosition) in Positions.circlePositions)
             {
+                if (secondId <= id) continue;
                 // Collision with other circle
-                float xDifference = Mathf.Pow(Positions.circlePositions[i].x - Positions.circlePositions[j].x, 2);
-                float yDifference = Mathf.Pow(Positions.circlePositions[i].y - Positions.circlePositions[j].y, 2);
-                float radiiSum = Mathf.Pow(((float)Sizes.sizes[i] / 2) + ((float)Sizes.sizes[j] / 2), 2);
+                float xDifference = Mathf.Pow(currentX - secondPosition.x, 2);
+                float yDifference = Mathf.Pow(currentY - secondPosition.y, 2);
+                float radiiSum = Mathf.Pow(radius + ((float)Sizes.sizes[secondId] / 2), 2);
                 if (xDifference + yDifference <= radiiSum)
                 {
-                    collide(i,(int)j);
-                    collide(j,(int)i);
+                    collide(id,(int)secondId);
+                    collide(secondId,(int)id);
                 }
             }
         }

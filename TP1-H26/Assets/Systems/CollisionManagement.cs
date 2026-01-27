@@ -1,22 +1,46 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class CollisionManagement : ISystem
 {
     public ECSController controller = ECSController.Instance;
 
     public string Name => "CollisionManagement";
-    List<uint> disappeared = new();
 
     public void UpdateSystem()
     {
+        float maxY = Camera.main.orthographicSize;
+        float minY = -maxY;
+        float maxX = maxY * Camera.main.aspect;
+        float minX = -maxX;
         foreach (var (id, colliders) in CollisionPair.collisionPairs)
         {
-            foreach (int collider in colliders)
+            uint firstCircle = id;
+            foreach (int collider in colliders)  //iterate over every colliding object/wall
             {
-                if (id < collider) //we only process each pair once by processing the smaller one
+                if (collider < 0)
                 {
-                    uint firstCircle = id;
+                    WallOrientation wall = (WallOrientation)(-collider);
+                    Vector2 velocity = Velocities.velocities[id];
+                    Vector2 position = Positions.circlePositions[id];
+                    float radius = (float)Sizes.sizes[id] / 2;
+                    switch (wall)
+                    {
+                        case WallOrientation.Vertical:
+                            velocity.x *= -1;
+                            if (position.x + radius > maxX) position.x = maxX - radius;
+                            if (position.x - radius < minX) position.x = minX + radius;
+                            break;
+                        case WallOrientation.Horizontal:
+                            velocity.y *= -1;
+                            if (position.y + radius > maxY) position.y = maxY - radius;
+                            if (position.y - radius < minY) position.y = minY + radius;
+                            break;
+                    }
+                    Positions.circlePositions[id] = position;
+                    Velocities.velocities[id] = velocity;
+                }
+                else if (id < collider) //we only process each pair once by processing the smaller one
+                {
                     uint secondCircle = (uint)collider;
                     if (CollisionBehavior.behaviors[firstCircle] == Behavior.Dynamic && CollisionBehavior.behaviors[secondCircle] == Behavior.Dynamic)
                     {
@@ -30,24 +54,18 @@ public class CollisionManagement : ISystem
                         {
                             if (Sizes.sizes[firstCircle] < Sizes.sizes[secondCircle])
                             {
+
                                 Sizes.sizes[firstCircle] -= 1;
                                 Sizes.sizes[secondCircle] += 1;
+
                             }
                             else
                             {
                                 Sizes.sizes[firstCircle] += 1;
                                 Sizes.sizes[secondCircle] -= 1;
+
                             }
                         }
-                    }
-
-                    if (Sizes.sizes[firstCircle] == 0)
-                    {
-                        disappeared.Add(firstCircle);
-                    }
-                    if (Sizes.sizes[secondCircle] == 0)
-                    {
-                        disappeared.Add(firstCircle);
                     }
 
                     CollisionResult resultingPosVel = CollisionUtility.CalculateCollision(
@@ -67,21 +85,17 @@ public class CollisionManagement : ISystem
 
                     if (CollisionBehavior.behaviors[firstCircle] == Behavior.Dynamic)
                     {
-                        controller.UpdateShapePosition(firstCircle, newPos1);
+                        Positions.circlePositions[firstCircle] = newPos1;
                         Velocities.velocities[firstCircle] = newVel1;
                     }
                     if (CollisionBehavior.behaviors[secondCircle] == Behavior.Dynamic)
                     {
-                        controller.UpdateShapePosition(secondCircle, newPos2);
+                        Positions.circlePositions[secondCircle] = newPos2;
                         Velocities.velocities[secondCircle] = newVel2;
                     }
 
                 }
             }
-        }
-        foreach(var id in disappeared)
-        {
-            controller.DestroyShape(id);
         }
         CollisionPair.collisionPairs.Clear();
     }

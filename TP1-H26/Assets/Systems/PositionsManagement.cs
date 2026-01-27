@@ -1,31 +1,23 @@
+using System.Linq;
 using UnityEngine;
 
 public class PositionsManagement : ISystem
 {
     public string Name => "PositionsManagement";
     public ECSController controller = ECSController.Instance;
-    public bool firstTime = true;
 
     public void UpdateSystem()
-    {
-        for (uint i = 0; i < Positions.circlePositions.Count; i++)
+    {   
+        foreach (var (id, position) in Positions.circlePositions.ToList()) 
         {
             float newX;
             float newY;
-            if (firstTime)
-            {
-                newX = Positions.circlePositions[i].x;
-                newY = Positions.circlePositions[i].y;
-                firstTime = false;
-            }
-            else
-            {
-                newX = Velocities.velocities[i].x + Positions.circlePositions[i].x;
-                newY = Velocities.velocities[i].y + Positions.circlePositions[i].y;
-            }
+            newX = Velocities.velocities[id].x + position.x;
+            newY = Velocities.velocities[id].y + position.y;
             Vector2 newPosition = new Vector2(newX, newY);
-            Positions.circlePositions[i] = newPosition;
-            controller.UpdateShapePosition(i, newPosition);
+            Positions.circlePositions[id] = newPosition;
+            controller.UpdateShapePosition(id, newPosition);
+            // Debug.Log("id: " + id + " x: " + newX + " y: " + newY + " velx: " + Velocities.velocities[id].x + " vely: " + Velocities.velocities[id].y);
         }
     }
 }
