@@ -29,23 +29,29 @@ public class RegisterSystems
         }
         toRegister.Add(new CirclesManagement());
 
-        // Movement & physics
+        // movement & physics
         toRegister.Add(new PositionsManagement());
         toRegister.Add(new CollisionDetection());
-        toRegister.Add(new CollisionManagement());
 
-        // Size & protection logic
-        toRegister.Add(new SizeManagement());
-        toRegister.Add(new ProtectionStartManagement());
+        // protection management 
         toRegister.Add(new ProtectionTickManagement());
+        toRegister.Add(new ProtectionStartManagement());
 
-        // 💥 Explosion (AFTER size is finalized)
-        toRegister.Add(new ExplosionDetectionSystem());
-        toRegister.Add(new ExplosionExecutionSystem());
 
-        // Rendering
+        // colors
         toRegister.Add(new ColorSetManagement());
         toRegister.Add(new ColorDisplayManagement());
+
+        // collision processing and closing (needs to be after all systems checking collisions)
+        toRegister.Add(new CollisionManagement());
+
+        // sets real size
+        toRegister.Add(new SizeManagement());
+
+        // explosion
+        toRegister.Add(new ExplosionDetectionSystem());
+        toRegister.Add(new ExplosionExecutionSystem());
+        
         return toRegister;
     }
 }

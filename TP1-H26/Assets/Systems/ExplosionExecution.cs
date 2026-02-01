@@ -9,20 +9,15 @@ public class ExplosionExecutionSystem : ISystem
     
     public void UpdateSystem()
     {
-        if (Explosion.requests.Count == 0)
-            return;
 
         List<uint> toExplode =
-            new List<uint>(Explosion.requests.Keys);
+            new List<uint>(Explosion.explosions.Keys);
 
-        foreach (uint entity in toExplode)
+        foreach (uint circle in toExplode)
         {
-            if (!Sizes.sizes.ContainsKey(entity))
-                continue;
-
-            Vector2 position = Positions.circlePositions[entity];
-            Vector2 velocity = Velocities.velocities[entity];
-            int size = Sizes.sizes[entity];
+            Vector2 position = Positions.circlePositions[circle];
+            Vector2 velocity = Velocities.velocities[circle];
+            int size = Sizes.sizes[circle];
 
             int newSize = Mathf.Max(1, size / 4);
 
@@ -36,41 +31,41 @@ public class ExplosionExecutionSystem : ISystem
 
             foreach (Vector2 dir in diagonals)
             {
-                uint newEntity = Positions.circlePositions.Keys.Max() + 1;
+                uint newCircle = Positions.circlePositions.Keys.Max() + 1;
+                Debug.Log(newCircle);
 
                 float offset = newSize * 0.6f;
 
                 Positions.circlePositions.Add(
-                    newEntity,
+                    newCircle,
                     position + dir.normalized * offset
                 );
-                Sizes.sizes.Add(newEntity, newSize);
+                Sizes.sizes.Add(newCircle, newSize);
 
                 Velocities.velocities.Add(
-                    newEntity,
+                    newCircle,
                     dir.normalized * velocity.magnitude
                 );
 
-                CollisionCount.collisionCount.Add(newEntity, 0);
-                CollisionBehavior.behaviors.Add(newEntity, Behavior.Dynamic);
+                CollisionCount.collisionCount.Add(newCircle, 0);
+                CollisionBehavior.behaviors.Add(newCircle, Behavior.Dynamic);
 
-                controller.CreateShape(newEntity, newSize);
+                controller.CreateShape(newCircle, newSize);
             }
-
-
-            RemoveEntity(entity);
+            RemoveCircle(circle);
         }
 
-        Explosion.requests.Clear();
+        Explosion.explosions.Clear();
     }
 
-    private void RemoveEntity(uint entity)
+    private void RemoveCircle(uint circle)
     {
-        controller.DestroyShape(entity);
-        Positions.circlePositions.Remove(entity);
-        Velocities.velocities.Remove(entity);
-        Sizes.sizes.Remove(entity);
-        CollisionCount.collisionCount.Remove(entity);
-        CollisionBehavior.behaviors.Remove(entity);
+        controller.DestroyShape(circle);
+        Positions.circlePositions.Remove(circle);
+        Velocities.velocities.Remove(circle);
+        Sizes.sizes.Remove(circle);
+        Colors.colors.Remove(circle);
+        Protections.protections.Remove(circle);
+        CollisionPair.collisionPairs.Remove(circle);
     }
 }

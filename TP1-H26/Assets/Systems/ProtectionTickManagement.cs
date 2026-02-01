@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ProtectionTickManagement : ISystem
 {
@@ -9,17 +10,16 @@ public class ProtectionTickManagement : ISystem
     List<uint> expired = new();
     public void UpdateSystem()
     {
-        foreach (var (id, protection) in Protections.protections) {
+        foreach (var (id, protection) in Protections.protections.ToList()) {
             {
                 float newProtectionRemaining = Math.Max(protection.Remaining - 1, 0);
                 float newProtectionCooldown = Math.Max(protection.Cooldown - 1, 0);
-
-                Protections.protections[id] = new ProtectionTimers{Remaining = newProtectionRemaining,Cooldown = newProtectionCooldown};
                 if (newProtectionCooldown > 0)
                 {
                     expired.Add(id);
                 }
-                
+
+                Protections.protections[id] = new ProtectionTimers{Remaining = newProtectionRemaining,Cooldown = newProtectionCooldown};
             }
         }
         foreach(var id in expired)

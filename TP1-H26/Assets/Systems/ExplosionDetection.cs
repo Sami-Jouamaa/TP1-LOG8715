@@ -8,13 +8,13 @@ public class ExplosionDetectionSystem : ISystem
         int explosionSize =
             ECSController.Instance.Config.explosionSize;
 
-        foreach (var (entity, size) in Sizes.sizes)
+        foreach (var (circle, size) in Sizes.sizes)
         {
             if (size >= explosionSize)
             {
-                if (!Explosion.requests.ContainsKey(entity))
+                if (!Explosion.explosions.ContainsKey(circle))
                 {
-                    Explosion.requests.Add(entity, true);
+                    Explosion.explosions.Add(circle, true);
                 }
             }
         }
