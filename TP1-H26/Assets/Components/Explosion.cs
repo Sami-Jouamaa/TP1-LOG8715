@@ -1,6 +1,10 @@
 using System.Collections.Generic;
-
+public enum ExplosionState
+{
+    Exploding,
+    Debris
+    }
 public class Explosion : IComponent
 {
-    public static Dictionary<uint, bool> explosions = new Dictionary<uint, bool>();
+    public static Dictionary<uint, ExplosionState> explosions = new();
 }

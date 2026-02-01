@@ -6,5 +6,5 @@ enum WallOrientation
 }
 public class CollisionPair : IComponent
 {
-    public static Dictionary<uint, List<int>> collisionPairs = new Dictionary<uint, List<int>>();
+    public static Dictionary<uint, List<int>> collisionPairs = new();
 }

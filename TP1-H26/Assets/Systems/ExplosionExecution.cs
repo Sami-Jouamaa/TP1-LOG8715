@@ -6,14 +6,13 @@ public class ExplosionExecutionSystem : ISystem
 {
     public ECSController controller = ECSController.Instance;
     public string Name => "ExplosionExecution";
-    
+    List<uint> exploding = new();
     public void UpdateSystem()
     {
-
-        List<uint> toExplode =
-            new List<uint>(Explosion.explosions.Keys);
-
-        foreach (uint circle in toExplode)
+        exploding = Explosion.explosions.Where(explosion => explosion.Value == ExplosionState.Exploding).Select(explosion => explosion.Key).ToList();
+        Explosion.explosions.Clear();
+        
+        foreach (uint circle in exploding)
         {
             Vector2 position = Positions.circlePositions[circle];
             Vector2 velocity = Velocities.velocities[circle];
@@ -32,9 +31,8 @@ public class ExplosionExecutionSystem : ISystem
             foreach (Vector2 dir in diagonals)
             {
                 uint newCircle = Positions.circlePositions.Keys.Max() + 1;
-                Debug.Log(newCircle);
 
-                float offset = newSize * 0.6f;
+                float offset = newSize * Mathf.Sqrt(2f);
 
                 Positions.circlePositions.Add(
                     newCircle,
@@ -51,11 +49,10 @@ public class ExplosionExecutionSystem : ISystem
                 CollisionBehavior.behaviors.Add(newCircle, Behavior.Dynamic);
 
                 controller.CreateShape(newCircle, newSize);
+                Explosion.explosions.Add(newCircle, ExplosionState.Debris);
             }
             RemoveCircle(circle);
         }
-
-        Explosion.explosions.Clear();
     }
 
     private void RemoveCircle(uint circle)
@@ -67,5 +64,8 @@ public class ExplosionExecutionSystem : ISystem
         Colors.colors.Remove(circle);
         Protections.protections.Remove(circle);
         CollisionPair.collisionPairs.Remove(circle);
+        CollisionCount.collisionCount.Remove(circle);
+        CollisionBehavior.behaviors.Remove(circle);
+        Explosion.explosions.Remove(circle);
     }
 }

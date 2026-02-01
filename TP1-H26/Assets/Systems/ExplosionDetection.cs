@@ -12,10 +12,7 @@ public class ExplosionDetectionSystem : ISystem
         {
             if (size >= explosionSize)
             {
-                if (!Explosion.explosions.ContainsKey(circle))
-                {
-                    Explosion.explosions.Add(circle, true);
-                }
+                Explosion.explosions[circle] = ExplosionState.Exploding;
             }
         }
     }

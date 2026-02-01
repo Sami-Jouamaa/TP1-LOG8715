@@ -7,7 +7,7 @@ public class ProtectionTickManagement : ISystem
     public ECSController controller = ECSController.Instance;
     public string Name => "ProtectionTickManagement";
 
-    List<uint> expired = new();
+    readonly List<uint> expired = new();
     public void UpdateSystem()
     {
         foreach (var (id, protection) in Protections.protections.ToList()) {

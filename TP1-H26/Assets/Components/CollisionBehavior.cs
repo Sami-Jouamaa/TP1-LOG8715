@@ -7,6 +7,6 @@ public enum Behavior
     }
 public class CollisionBehavior : IComponent
 {  
-    public static Dictionary<uint, Behavior> behaviors = new Dictionary<uint, Behavior>();
+    public static Dictionary<uint, Behavior> behaviors = new();
     
 }

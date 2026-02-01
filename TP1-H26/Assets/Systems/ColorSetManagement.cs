@@ -9,6 +9,8 @@ public class ColorSetManagement : ISystem
             Behavior behavior = CollisionBehavior.behaviors[id];
             bool isInCollision = CollisionPair.collisionPairs.ContainsKey(id);
             int size = Sizes.sizes[id];
+            bool isDebris = Explosion.explosions.ContainsKey(id) && Explosion.explosions[id] == ExplosionState.Debris;
+
             if (behavior == Behavior.Static)
                 Colors.colors[id] = CircleColor.Red;
             else if (isInCollision)
@@ -19,11 +21,10 @@ public class ColorSetManagement : ISystem
                 Colors.colors[id] = CircleColor.LightBlue;
             else if (size == controller.Config.explosionSize - 1)
                 Colors.colors[id] = CircleColor.Orange;
-            //else if (isNewExplosionCircle)
-            //  Colors.colors[id] = CircleColor.Pink;
+            else if (isDebris)
+             Colors.colors[id] = CircleColor.Pink;
             else
                 Colors.colors[id] = CircleColor.DarkBlue;
-            //verify if can be protected means under the size threshold
         }
     }
 }

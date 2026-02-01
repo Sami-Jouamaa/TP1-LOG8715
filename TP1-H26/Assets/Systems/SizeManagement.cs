@@ -4,7 +4,7 @@ public class SizeManagement : ISystem
 {
     public ECSController controller = ECSController.Instance;
     public string Name => "SizeManagement";
-    List<uint> disappeared = new();
+    readonly List<uint> disappeared = new();
 
     public void UpdateSystem()
     {
@@ -27,6 +27,9 @@ public class SizeManagement : ISystem
             Colors.colors.Remove(id);
             Protections.protections.Remove(id);
             CollisionPair.collisionPairs.Remove(id);
+            CollisionCount.collisionCount.Remove(id);
+            CollisionBehavior.behaviors.Remove(id);
+            Explosion.explosions.Remove(id);
         }
         disappeared.Clear();
     }

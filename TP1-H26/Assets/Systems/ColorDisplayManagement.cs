@@ -11,7 +11,8 @@ public class ColorDisplayManagement : ISystem
             {CircleColor.LightBlue, new Color(0.5f, 0.7f, 0.8f)},
             {CircleColor.Yellow, new Color(1f, 1f, 0f)},
             {CircleColor.Orange, new Color(1f, 0.5f, 0f)},
-            {CircleColor.DarkBlue, new Color(0f, 0f, 0.5f)},};
+            {CircleColor.DarkBlue, new Color(0f, 0f, 0.5f)},
+            {CircleColor.Pink, new Color(1f, 0.5f, 0.75f)}};
     public ECSController controller = ECSController.Instance;
     public string Name => "ColorDisplayManagement";
     public void UpdateSystem()

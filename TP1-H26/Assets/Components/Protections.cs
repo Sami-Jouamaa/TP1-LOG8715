@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 public struct ProtectionTimers
 {
@@ -8,5 +7,5 @@ public struct ProtectionTimers
 }
 public class Protections : IComponent
 {
-    public static Dictionary<uint, ProtectionTimers> protections = new Dictionary<uint, ProtectionTimers>();
+    public static Dictionary<uint, ProtectionTimers> protections = new();
 }

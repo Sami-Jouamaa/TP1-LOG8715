@@ -41,6 +41,7 @@ public class CollisionManagement : ISystem
                 }
                 else if (id < collider) //we only process each pair once by processing the smaller one
                 {
+                    if (!CollisionPair.collisionPairs.ContainsKey((uint)collider)) continue;
                     uint secondCircle = (uint)collider;
                     if (CollisionBehavior.behaviors[firstCircle] == Behavior.Dynamic && CollisionBehavior.behaviors[secondCircle] == Behavior.Dynamic)
                     {

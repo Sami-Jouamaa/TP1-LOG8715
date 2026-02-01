@@ -6,7 +6,7 @@ public class CollisionDetection : ISystem
     public ECSController controller = ECSController.Instance;
 
     public string Name => "CollisionDetection";
-    static void collide(uint a, int b)
+    static void Collide(uint a, int b)
     {
         List<int> list = CollisionPair.collisionPairs.ContainsKey(a) ? CollisionPair.collisionPairs[a] : new();
         list.Add(b);
@@ -14,7 +14,7 @@ public class CollisionDetection : ISystem
     }
     static void wallHit(uint id, WallOrientation wall)
     {
-        collide(id, -(int)wall);
+        Collide(id, -(int)wall);
     }
     public void UpdateSystem()
     {
@@ -24,13 +24,11 @@ public class CollisionDetection : ISystem
             float currentX = position.x;
             float currentY = position.y;
             float radius = (float)Sizes.sizes[id] / 2;
-
-            float fov = Camera.main.orthographicSize;
             
-            float maxX = fov*2 + 1;
-            float minX = maxX * -1;
-            float maxY = fov;
-            float minY = maxY * -1; 
+            float maxY = Camera.main.orthographicSize;
+            float minY = -maxY;
+            float maxX = maxY * Camera.main.aspect;
+            float minX = -maxX;
             if (currentX + radius >= maxX || currentX - radius <= minX)
                 wallHit(id, WallOrientation.Vertical);
             if (currentY + radius >= maxY || currentY - radius <= minY)
@@ -45,8 +43,8 @@ public class CollisionDetection : ISystem
                 float radiiSum = Mathf.Pow(radius + ((float)Sizes.sizes[secondId] / 2), 2);
                 if (xDifference + yDifference <= radiiSum)
                 {
-                    collide(id,(int)secondId);
-                    collide(secondId,(int)id);
+                    Collide(id,(int)secondId);
+                    Collide(secondId,(int)id);
                 }
             }
         }

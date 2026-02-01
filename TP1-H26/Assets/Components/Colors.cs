@@ -8,10 +8,11 @@ public enum CircleColor
     LightBlue,
     Yellow,
     Orange,
-    DarkBlue
+    DarkBlue,
+    Pink
     }
 public class Colors : IComponent
 {  
-    public static Dictionary<uint, CircleColor> colors = new Dictionary<uint, CircleColor>();
+    public static Dictionary<uint, CircleColor> colors = new();
     
 }
