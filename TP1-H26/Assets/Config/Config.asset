@@ -13,17 +13,23 @@ MonoBehaviour:
   m_Name: Config
   m_EditorClassIdentifier: 
   explosionSize: 8
-  protectionSize: 2
+  protectionSize: 3
   protectionCollisionCount: 3
   protectionDuration: 5
   protectionCooldown: 15
   circleInstancesToSpawn:
   - initialSize: 5
     initialPosition: {x: 0, y: 0}
-    initialVelocity: {x: 0.03, y: 0}
+    initialVelocity: {x: 25, y: 0}
   - initialSize: 5
-    initialPosition: {x: 5, y: 0}
-    initialVelocity: {x: -0.01, y: -0.01}
+    initialPosition: {x: 10, y: 7}
+    initialVelocity: {x: -6, y: 14}
+  - initialSize: 6
+    initialPosition: {x: 17, y: -8}
+    initialVelocity: {x: 16, y: 3}
+  - initialSize: 4
+    initialPosition: {x: -9, y: 7}
+    initialVelocity: {x: -8, y: 6}
   systemsEnabled:
     keys:
     - CirclesManagement

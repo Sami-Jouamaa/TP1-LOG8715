@@ -1,30 +1,25 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class ProtectionTickManagement : ISystem
 {
     public ECSController controller = ECSController.Instance;
     public string Name => "ProtectionTickManagement";
 
-    readonly List<uint> expired = new();
     public void UpdateSystem()
     {
         foreach (var (id, protection) in Protections.protections.ToList()) {
             {
-                float newProtectionRemaining = Math.Max(protection.Remaining - 1, 0);
-                float newProtectionCooldown = Math.Max(protection.Cooldown - 1, 0);
-                if (newProtectionCooldown > 0)
-                {
-                    expired.Add(id);
+                float newProtectionRemaining = Math.Max(protection.Remaining - Time.deltaTime, 0);
+                float newProtectionCooldown = Math.Max(protection.Cooldown - Time.deltaTime, 0);
+                if (newProtectionCooldown <= 0){
+                    Protections.protections.Remove(id);
+                    CollisionCount.collisionCount[id] = 0;
                 }
-
-                Protections.protections[id] = new ProtectionTimers{Remaining = newProtectionRemaining,Cooldown = newProtectionCooldown};
+                else
+                    Protections.protections[id] = new ProtectionTimers{Remaining = newProtectionRemaining,Cooldown = newProtectionCooldown};
             }
-        }
-        foreach(var id in expired)
-        {
-            Protections.protections.Remove(id);
         }
     }
 }

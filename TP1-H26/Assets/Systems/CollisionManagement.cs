@@ -41,34 +41,47 @@ public class CollisionManagement : ISystem
                 }
                 else if (id < collider) //we only process each pair once by processing the smaller one
                 {
-                    if (!CollisionPair.collisionPairs.ContainsKey((uint)collider)) continue;
                     uint secondCircle = (uint)collider;
-                    if (CollisionBehavior.behaviors[firstCircle] == Behavior.Dynamic && CollisionBehavior.behaviors[secondCircle] == Behavior.Dynamic)
+                    if (!CollisionPair.collisionPairs.ContainsKey(secondCircle))
+                        continue;
+
+                    bool firstDynamic = CollisionBehavior.behaviors[firstCircle] == Behavior.Dynamic;
+                    bool secondDynamic = CollisionBehavior.behaviors[secondCircle] == Behavior.Dynamic;
+                    if (firstDynamic && secondDynamic)
                     {
-                        if (Sizes.sizes[firstCircle] <= controller.Config.protectionSize && Sizes.sizes[firstCircle] == Sizes.sizes[secondCircle])
+                        int firstSize = Sizes.sizes[firstCircle];
+                        int secondSize = Sizes.sizes[secondCircle];
+                        if (firstSize == secondSize)
                         {
-                            CollisionCount.collisionCount[firstCircle] += 1;
-                            CollisionCount.collisionCount[secondCircle] += 1;
-                        }
-
-                        if (Sizes.sizes[firstCircle] != Sizes.sizes[secondCircle])
-                        {
-                            if (Sizes.sizes[firstCircle] < Sizes.sizes[secondCircle])
+                            if (firstSize <= controller.Config.protectionSize)
                             {
-
-                                Sizes.sizes[firstCircle] -= 1;
-                                Sizes.sizes[secondCircle] += 1;
-
+                                CollisionCount.collisionCount[firstCircle]++;
+                                CollisionCount.collisionCount[secondCircle]++;
                             }
-                            else
-                            {
-                                Sizes.sizes[firstCircle] += 1;
-                                Sizes.sizes[secondCircle] -= 1;
+                        }
+                        else
+                        {
+                            uint smallerCircle = firstSize < secondSize ? firstCircle : secondCircle;
+                            uint biggerCircle = firstSize < secondSize ? secondCircle : firstCircle;
 
+                            bool smallerIsProtected = 
+                                Protections.protections.ContainsKey(smallerCircle) && Protections.protections[smallerCircle].Remaining > 0;
+
+                            bool biggerIsProtected = 
+                                Protections.protections.ContainsKey(biggerCircle) && Protections.protections[biggerCircle].Remaining > 0;
+
+                            if (!biggerIsProtected)
+                            {
+                                if (smallerIsProtected)
+                                    Sizes.sizes[biggerCircle]--;
+                                else
+                                {
+                                    Sizes.sizes[biggerCircle]++;
+                                    Sizes.sizes[smallerCircle]--;
+                                }
                             }
                         }
                     }
-
                     CollisionResult resultingPosVel = CollisionUtility.CalculateCollision(
                         Positions.circlePositions[firstCircle],
                         Velocities.velocities[firstCircle],
@@ -77,19 +90,19 @@ public class CollisionManagement : ISystem
                         Velocities.velocities[secondCircle],
                         Sizes.sizes[secondCircle]
                     );
-
+                    if (resultingPosVel == null) continue;
                     Vector2 newPos1 = resultingPosVel.position1;
                     Vector2 newVel1 = resultingPosVel.velocity1;
 
                     Vector2 newPos2 = resultingPosVel.position2;
                     Vector2 newVel2 = resultingPosVel.velocity2;
 
-                    if (CollisionBehavior.behaviors[firstCircle] == Behavior.Dynamic)
+                    if (firstDynamic)
                     {
                         Positions.circlePositions[firstCircle] = newPos1;
                         Velocities.velocities[firstCircle] = newVel1;
                     }
-                    if (CollisionBehavior.behaviors[secondCircle] == Behavior.Dynamic)
+                    if (secondDynamic)
                     {
                         Positions.circlePositions[secondCircle] = newPos2;
                         Velocities.velocities[secondCircle] = newVel2;

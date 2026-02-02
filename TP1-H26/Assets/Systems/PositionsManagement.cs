@@ -8,15 +8,11 @@ public class PositionsManagement : ISystem
 
     public void UpdateSystem()
     {   
-        foreach (var (id, position) in Positions.circlePositions.ToList()) 
+        foreach (var (id, _) in Positions.circlePositions.ToList()) 
         {
-            float newX;
-            float newY;
-            newX = Velocities.velocities[id].x + position.x;
-            newY = Velocities.velocities[id].y + position.y;
-            Vector2 newPosition = new Vector2(newX, newY);
-            Positions.circlePositions[id] = newPosition;
-            controller.UpdateShapePosition(id, newPosition);
+
+            Positions.circlePositions[id] += Velocities.velocities[id] * Time.deltaTime;
+            controller.UpdateShapePosition(id, Positions.circlePositions[id]);
         }
     }
 }
