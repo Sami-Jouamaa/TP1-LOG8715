@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class ColorDisplayManagement : ISystem
 {
-    private static readonly Dictionary<CircleColor, Color> RGBTraduction = 
+    private static readonly Dictionary<CircleColor, Color> RGBTraduction =
         new(){{
             CircleColor.Red, new Color(1f, 0f, 0f)},
             {CircleColor.Green, new Color(0f, 1f, 0f)},
@@ -17,10 +17,25 @@ public class ColorDisplayManagement : ISystem
     public string Name => "ColorDisplayManagement";
     public void UpdateSystem()
     {
-        foreach (var (id, color) in Colors.colors) {
-            Color newColor = RGBTraduction[color];
-            controller.UpdateShapeColor(id, newColor);
+        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
+        {
+            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
+            {
+                ColourDisplay(leftSideId);
+            }
         }
+
+        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
+        {
+            ColourDisplay(rightSideId);
+        }
+    }
+
+    public void ColourDisplay(uint circleId)
+    {
+        CircleColor currentColour = Colors.colors[circleId];
+        Color newColour = RGBTraduction[currentColour];
+        controller.UpdateShapeColor(circleId, newColour);
     }
 }
 

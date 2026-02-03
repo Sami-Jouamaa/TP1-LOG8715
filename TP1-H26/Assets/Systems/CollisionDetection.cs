@@ -9,8 +9,15 @@ public class CollisionDetection : ISystem
     static void Collide(uint a, int b)
     {
         List<int> list = CollisionPair.collisionPairs.ContainsKey(a) ? CollisionPair.collisionPairs[a] : new();
-        list.Add(b);
-        CollisionPair.collisionPairs[a] = list;
+        if (list.Contains(b))
+        {
+            CollisionPair.collisionPairs[a] = list;
+        }
+        else
+        {
+            list.Add(b);
+            CollisionPair.collisionPairs[a] = list;
+        }
     }
     static void wallHit(uint id, WallOrientation wall)
     {
@@ -18,35 +25,47 @@ public class CollisionDetection : ISystem
     }
     public void UpdateSystem()
     {
-        foreach (var (id, position) in Positions.circlePositions )
+        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
         {
-            // Collision with screen border
-            float currentX = position.x;
-            float currentY = position.y;
-            float radius = (float)Sizes.sizes[id] / 2;
-            
-            float maxY = Camera.main.orthographicSize;
-            float minY = -maxY;
-            float maxX = maxY * Camera.main.aspect;
-            float minX = -maxX;
-            if (currentX + radius >= maxX || currentX - radius <= minX)
-                wallHit(id, WallOrientation.Vertical);
-            if (currentY + radius >= maxY || currentY - radius <= minY)
-                wallHit(id, WallOrientation.Horizontal);
-
-            foreach (var (secondId, secondPosition) in Positions.circlePositions)
+            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
             {
-                if (secondId <= id) continue;
-                // Collision with other circle
-                float xDifference = Mathf.Pow(currentX - secondPosition.x, 2);
-                float yDifference = Mathf.Pow(currentY - secondPosition.y, 2);
-                float radiiSum = Mathf.Pow(radius + ((float)Sizes.sizes[secondId] / 2), 2);
-                if (xDifference + yDifference <= radiiSum)
-                {
-                    Collide(id,(int)secondId);
-                    Collide(secondId,(int)id);
-                }
+                DetectCollision(leftSideId);
             }
         }
+
+        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
+        {
+            DetectCollision(rightSideId);
+        }
+    }
+
+    public void DetectCollision(uint firstCircleId)
+    {
+        Vector2 firstPosition = Positions.circlePositions[firstCircleId];
+        float radius = (float)Sizes.sizes[firstCircleId] / 2;
+
+        float maxY = Camera.main.orthographicSize;
+        float minY = -maxY;
+        float maxX = maxY * Camera.main.aspect;
+        float minX = -maxX;
+        if (firstPosition.x + radius >= maxX || firstPosition.x - radius <= minX)
+            wallHit(firstCircleId, WallOrientation.Vertical);
+        if (firstPosition.y + radius >= maxY || firstPosition.y - radius <= minY)
+            wallHit(firstCircleId, WallOrientation.Horizontal);
+
+        foreach (var (secondId, secondPosition) in Positions.circlePositions)
+        {
+            if (secondId <= firstCircleId) continue;
+            // Collision with other circle
+            float xDifference = Mathf.Pow(firstPosition.x - secondPosition.x, 2);
+            float yDifference = Mathf.Pow(firstPosition.y - secondPosition.y, 2);
+            float radiiSum = Mathf.Pow(radius + ((float)Sizes.sizes[secondId] / 2), 2);
+            if (xDifference + yDifference <= radiiSum)
+            {
+                Collide(firstCircleId, (int)secondId);
+                Collide(secondId, (int)firstCircleId);
+            }
+        }
+
     }
 }

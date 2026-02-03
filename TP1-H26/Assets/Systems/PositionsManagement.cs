@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class PositionsManagement : ISystem
@@ -7,12 +6,25 @@ public class PositionsManagement : ISystem
     public ECSController controller = ECSController.Instance;
 
     public void UpdateSystem()
-    {   
-        foreach (var (id, _) in Positions.circlePositions.ToList()) 
+    {
+        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
         {
-
-            Positions.circlePositions[id] += Velocities.velocities[id] * Time.deltaTime;
-            controller.UpdateShapePosition(id, Positions.circlePositions[id]);
+            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
+            {
+                ChangePositions(leftSideId);
+            }
         }
+
+        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
+        {
+            ChangePositions(rightSideId);
+        }
+    }
+
+    public void ChangePositions(uint circleId)
+    {
+        if (!Positions.circlePositions.ContainsKey(circleId)) return;
+        Positions.circlePositions[circleId] += Velocities.velocities[circleId] * Time.deltaTime;
+        controller.UpdateShapePosition(circleId, Positions.circlePositions[circleId]);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 
 public class RegisterSystems
 {
@@ -26,6 +26,15 @@ public class RegisterSystems
             {
                 CollisionBehavior.behaviors.Add(i, Behavior.Dynamic);
             }
+
+            if (Positions.circlePositions[i].x < 0)
+            {
+                LeftSideCircles.circlesOnLeftSide.Add(i);
+            }
+            else
+            {
+                RightSideCircles.circlesOnRightSide.Add(i);
+            }
         }
         toRegister.Add(new CirclesManagement());
 
@@ -51,7 +60,7 @@ public class RegisterSystems
         // explosion
         toRegister.Add(new ExplosionDetectionSystem());
         toRegister.Add(new ExplosionExecutionSystem());
-        
+
         return toRegister;
     }
 }
