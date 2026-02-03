@@ -1,8 +1,38 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using UnityEditor.PackageManager.Requests;
 
 public class RegisterSystems
 {
+    private static void AddSystemList(List<ISystem> list)
+    {
+        list.Add(new CirclesManagement());
+
+        // movement & physics
+        list.Add(new PositionsManagement());
+        list.Add(new CollisionDetection());
+
+        // protection management 
+        list.Add(new ProtectionTickManagement());
+        list.Add(new ProtectionStartManagement());
+
+        // colors
+        list.Add(new ColorSetManagement());
+        list.Add(new ColorDisplayManagement());
+
+        // collision processing and closing (needs to be after all systems checking collisions)
+        list.Add(new CollisionManagement());
+
+        // sets real size
+        list.Add(new SizeManagement());
+
+        // explosion
+        list.Add(new ExplosionDetectionSystem());
+        list.Add(new ExplosionExecutionSystem());
+
+        list.Add(new CircleDeleter());
+    }
     public static List<ISystem> GetListOfSystems()
     {
         List<Config.ShapeConfig> config = ECSController.Instance.Config.circleInstancesToSpawn;
@@ -36,31 +66,10 @@ public class RegisterSystems
                 RightSideCircles.circlesOnRightSide.Add(i);
             }
         }
-        toRegister.Add(new CirclesManagement());
+        AddSystemList(toRegister);
 
-        // movement & physics
-        toRegister.Add(new PositionsManagement());
-        toRegister.Add(new CollisionDetection());
-
-        // protection management 
-        toRegister.Add(new ProtectionTickManagement());
-        toRegister.Add(new ProtectionStartManagement());
-
-
-        // colors
-        toRegister.Add(new ColorSetManagement());
-        toRegister.Add(new ColorDisplayManagement());
-
-        // collision processing and closing (needs to be after all systems checking collisions)
-        toRegister.Add(new CollisionManagement());
-
-        // sets real size
-        toRegister.Add(new SizeManagement());
-
-        // explosion
-        toRegister.Add(new ExplosionDetectionSystem());
-        toRegister.Add(new ExplosionExecutionSystem());
 
         return toRegister;
     }
+
 }

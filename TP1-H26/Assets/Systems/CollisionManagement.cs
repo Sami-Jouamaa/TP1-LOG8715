@@ -49,6 +49,30 @@ public class CollisionManagement : ISystem
 
                 bool firstDynamic = CollisionBehavior.behaviors[firstCircleId] == Behavior.Dynamic;
                 bool secondDynamic = CollisionBehavior.behaviors[secondCircle] == Behavior.Dynamic;
+                CollisionResult resultingPosVel = CollisionUtility.CalculateCollision(
+                    Positions.circlePositions[firstCircleId],
+                    Velocities.velocities[firstCircleId],
+                    Sizes.sizes[firstCircleId],
+                    Positions.circlePositions[secondCircle],
+                    Velocities.velocities[secondCircle],
+                    Sizes.sizes[secondCircle]
+                );
+                Vector2 newPos1 = resultingPosVel.position1;
+                Vector2 newVel1 = resultingPosVel.velocity1;
+
+                Vector2 newPos2 = resultingPosVel.position2;
+                Vector2 newVel2 = resultingPosVel.velocity2;
+
+                if (firstDynamic)
+                {
+                    Positions.circlePositions[firstCircleId] = newPos1;
+                    Velocities.velocities[firstCircleId] = newVel1;
+                }
+                if (secondDynamic)
+                {
+                    Positions.circlePositions[secondCircle] = newPos2;
+                    Velocities.velocities[secondCircle] = newVel2;
+                }
                 if (firstDynamic && secondDynamic)
                 {
                     int firstSize = Sizes.sizes[firstCircleId];
@@ -83,30 +107,6 @@ public class CollisionManagement : ISystem
                             }
                         }
                     }
-                }
-                CollisionResult resultingPosVel = CollisionUtility.CalculateCollision(
-                    Positions.circlePositions[firstCircleId],
-                    Velocities.velocities[firstCircleId],
-                    Sizes.sizes[firstCircleId],
-                    Positions.circlePositions[secondCircle],
-                    Velocities.velocities[secondCircle],
-                    Sizes.sizes[secondCircle]
-                );
-                Vector2 newPos1 = resultingPosVel.position1;
-                Vector2 newVel1 = resultingPosVel.velocity1;
-
-                Vector2 newPos2 = resultingPosVel.position2;
-                Vector2 newVel2 = resultingPosVel.velocity2;
-
-                if (firstDynamic)
-                {
-                    Positions.circlePositions[firstCircleId] = newPos1;
-                    Velocities.velocities[firstCircleId] = newVel1;
-                }
-                if (secondDynamic)
-                {
-                    Positions.circlePositions[secondCircle] = newPos2;
-                    Velocities.velocities[secondCircle] = newVel2;
                 }
 
             }

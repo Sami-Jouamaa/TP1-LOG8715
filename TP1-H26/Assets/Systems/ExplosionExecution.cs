@@ -105,20 +105,6 @@ public class ExplosionExecutionSystem : ISystem
                 NewCirclesRightSide.Add(newCircle);
             }
         }
-        RemoveCircle(circleId);
-    }
-
-    private void RemoveCircle(uint circle)
-    {
-        controller.DestroyShape(circle);
-        Positions.circlePositions.Remove(circle);
-        Velocities.velocities.Remove(circle);
-        Sizes.sizes.Remove(circle);
-        Colors.colors.Remove(circle);
-        Protections.protections.Remove(circle);
-        CollisionPair.collisionPairs.Remove(circle);
-        CollisionCount.collisionCount.Remove(circle);
-        CollisionBehavior.behaviors.Remove(circle);
-        Explosion.explosions.Remove(circle);
+        DeadCircles.deadCircles.Add(circleId);
     }
 }
