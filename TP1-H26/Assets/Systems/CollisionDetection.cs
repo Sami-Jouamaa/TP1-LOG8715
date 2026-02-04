@@ -9,37 +9,17 @@ public class CollisionDetection : ISystem
     static void Collide(uint a, int b)
     {
         List<int> list = CollisionPair.collisionPairs.ContainsKey(a) ? CollisionPair.collisionPairs[a] : new();
-        if (list.Contains(b))
-        {
-            CollisionPair.collisionPairs[a] = list;
-        }
-        else
-        {
+        if (!list.Contains(b))
             list.Add(b);
             CollisionPair.collisionPairs[a] = list;
-        }
-    }
-    static void wallHit(uint id, WallOrientation wall)
-    {
-        Collide(id, -(int)wall);
     }
     public void UpdateSystem()
     {
-        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
-        {
-            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
-            {
-                DetectCollision(leftSideId);
-            }
-        }
-
-        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
-        {
-            DetectCollision(rightSideId);
-        }
+        foreach (uint id in Positions.circlePositions.Keys)
+            DetectCollision(id);
     }
 
-    public void DetectCollision(uint firstCircleId)
+    private static void DetectCollision(uint firstCircleId)
     {
         Vector2 firstPosition = Positions.circlePositions[firstCircleId];
         float radius = (float)Sizes.sizes[firstCircleId] / 2;
@@ -48,10 +28,15 @@ public class CollisionDetection : ISystem
         float minY = -maxY;
         float maxX = maxY * Camera.main.aspect;
         float minX = -maxX;
-        if (firstPosition.x + radius >= maxX || firstPosition.x - radius <= minX)
-            wallHit(firstCircleId, WallOrientation.Vertical);
-        if (firstPosition.y + radius >= maxY || firstPosition.y - radius <= minY)
-            wallHit(firstCircleId, WallOrientation.Horizontal);
+
+        if (firstPosition.x - radius <= minX)
+            WallHits.wallHits.Add(firstCircleId, WallPos.Left);
+        if (firstPosition.x + radius >= maxX)
+            WallHits.wallHits.Add(firstCircleId, WallPos.Right);
+        if (firstPosition.y - radius <= minY)
+            WallHits.wallHits.Add(firstCircleId, WallPos.Bottom);
+        if (firstPosition.y + radius >= maxY)
+            WallHits.wallHits.Add(firstCircleId, WallPos.Top);
 
         foreach (var (secondId, secondPosition) in Positions.circlePositions)
         {

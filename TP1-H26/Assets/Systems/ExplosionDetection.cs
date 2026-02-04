@@ -1,3 +1,4 @@
+using System.Drawing;
 using UnityEngine;
 
 public class ExplosionDetectionSystem : ISystem
@@ -8,18 +9,8 @@ public class ExplosionDetectionSystem : ISystem
 
     public void UpdateSystem()
     {
-        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
-        {
-            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
-            {
-                ExplosionDetection(leftSideId);
-            }
-        }
-
-        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
-        {
-            ExplosionDetection(rightSideId);
-        }
+        foreach (uint id in Sizes.sizes.Keys)
+            ExplosionDetection(id);
     }
 
     public void ExplosionDetection(uint circleId)

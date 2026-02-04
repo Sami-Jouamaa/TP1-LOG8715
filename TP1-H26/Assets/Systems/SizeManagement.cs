@@ -5,18 +5,8 @@ public class SizeManagement : ISystem
 
     public void UpdateSystem()
     {
-        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
-        {
-            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
-            {
-                ManageSize(leftSideId);
-            }
-        }
-
-        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
-        {
-            ManageSize(rightSideId);
-        }
+        foreach (var (id, _) in Sizes.sizes)
+            ManageSize(id);
     }
 
     public void ManageSize(uint circle)

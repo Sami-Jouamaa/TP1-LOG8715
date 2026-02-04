@@ -33,7 +33,6 @@ public class CirclesManagement : ISystem
                 RightSideCircles.circlesOnRightSide.RemoveAt(index);
                 LeftSideCircles.circlesOnLeftSide.Add(id);
             }
-            else continue;
         }
     }
 }

@@ -5,18 +5,8 @@ public class ProtectionStartManagement : ISystem
 
     public void UpdateSystem()
     {
-        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
-        {
-            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
-            {
-                ProtectionManagement(leftSideId);
-            }
-        }
-
-        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
-        {
-            ProtectionManagement(rightSideId);
-        }
+        foreach (uint id in Positions.circlePositions.Keys)
+            ProtectionManagement(id);
     }
 
     public void ProtectionManagement(uint id)

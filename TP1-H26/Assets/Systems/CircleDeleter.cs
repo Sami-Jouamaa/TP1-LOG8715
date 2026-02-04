@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class CircleDeleter : ISystem
 {
     public string Name => "RegionManagement";
@@ -9,7 +7,6 @@ public class CircleDeleter : ISystem
     {
         foreach (uint circle in DeadCircles.deadCircles)
         {
-            Debug.Log("deleting: " + circle);
             controller.DestroyShape(circle);
             Positions.circlePositions.Remove(circle);
             Velocities.velocities.Remove(circle);

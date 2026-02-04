@@ -17,21 +17,11 @@ public class ColorDisplayManagement : ISystem
     public string Name => "ColorDisplayManagement";
     public void UpdateSystem()
     {
-        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
-        {
-            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
-            {
-                ColourDisplay(leftSideId);
-            }
-        }
-
-        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
-        {
-            ColourDisplay(rightSideId);
-        }
+        foreach (uint id in Colors.colors.Keys)
+            ColorDisplay(id);
     }
 
-    public void ColourDisplay(uint circleId)
+    public void ColorDisplay(uint circleId)
     {
         CircleColor currentColour = Colors.colors[circleId];
         Color newColour = RGBTraduction[currentColour];

@@ -7,24 +7,15 @@ public class ColorSetManagement : ISystem
     public string Name => "ColorSetManagement";
     public void UpdateSystem()
     {
-        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
-        {
-            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
-            {
-                ColourSet(leftSideId);
-            }
-        }
+        foreach (uint id in Positions.circlePositions.Keys)
+            ColorSet(id);
 
-        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
-        {
-            ColourSet(rightSideId);
-        }
     }
 
-    public void ColourSet(uint circleId)
+    public void ColorSet(uint circleId)
     {
         Behavior behavior = CollisionBehavior.behaviors[circleId];
-        bool isInCollision = CollisionPair.collisionPairs.ContainsKey(circleId);
+        bool isInCollision = CollisionPair.collisionPairs.ContainsKey(circleId) || WallHits.wallHits.ContainsKey(circleId);
         int size = Sizes.sizes[circleId];
         bool isDebris = Explosion.explosions.ContainsKey(circleId) && Explosion.explosions[circleId] == ExplosionState.Debris;
 

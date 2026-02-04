@@ -22,6 +22,7 @@ public class RegisterSystems
         list.Add(new ColorDisplayManagement());
 
         // collision processing and closing (needs to be after all systems checking collisions)
+        list.Add(new WallCollision());
         list.Add(new CollisionManagement());
 
         // sets real size
