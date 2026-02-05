@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Schema;
 using UnityEngine;
 
 public class ExplosionExecutionSystem : ISystem
@@ -15,7 +14,8 @@ public class ExplosionExecutionSystem : ISystem
 
 
         foreach (uint id in exploding)
-            ApplyExplosion(id);
+            if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
+                ApplyExplosion(id);
 
         Explosion.explosions.Clear();
     }
@@ -39,7 +39,6 @@ public class ExplosionExecutionSystem : ISystem
         foreach (Vector2 dir in diagonals)
         {
             uint newCircle = Positions.circlePositions.Keys.Max() + 1;
-
             float offset = newSize * Mathf.Sqrt(2f);
 
             Positions.circlePositions.Add(
@@ -59,14 +58,6 @@ public class ExplosionExecutionSystem : ISystem
             controller.CreateShape(newCircle, newSize);
             Explosion.explosions.Add(newCircle, ExplosionState.Debris);
 
-            if (Positions.circlePositions[newCircle].x < 0)
-            {
-                LeftSideCircles.circlesOnLeftSide.Add(newCircle);
-            }
-            else
-            {
-                RightSideCircles.circlesOnRightSide.Add(newCircle);
-            }
         }
         DeadCircles.deadCircles.Add(circleId);
     }

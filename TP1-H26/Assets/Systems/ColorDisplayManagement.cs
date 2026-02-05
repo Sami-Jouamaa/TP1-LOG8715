@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-
 public class ColorDisplayManagement : ISystem
 {
     private static readonly Dictionary<CircleColor, Color> RGBTraduction =
@@ -18,7 +17,8 @@ public class ColorDisplayManagement : ISystem
     public void UpdateSystem()
     {
         foreach (uint id in Colors.colors.Keys)
-            ColorDisplay(id);
+            if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
+                ColorDisplay(id);
     }
 
     public void ColorDisplay(uint circleId)

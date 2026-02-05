@@ -17,8 +17,6 @@ public class CircleDeleter : ISystem
             CollisionCount.collisionCount.Remove(circle);
             CollisionBehavior.behaviors.Remove(circle);
             Explosion.explosions.Remove(circle);
-            LeftSideCircles.circlesOnLeftSide.Remove(circle);
-            RightSideCircles.circlesOnRightSide.Remove(circle);
             Regions.regions.Remove(circle);
         }
         DeadCircles.deadCircles.Clear();

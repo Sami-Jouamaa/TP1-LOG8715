@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class PositionsManagement : ISystem
@@ -7,23 +8,13 @@ public class PositionsManagement : ISystem
 
     public void UpdateSystem()
     {
-        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
-        {
-            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
-            {
-                ChangePositions(leftSideId);
-            }
-        }
-
-        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
-        {
-            ChangePositions(rightSideId);
-        }
+        foreach (uint id in Positions.circlePositions.Keys.ToList())
+            if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
+                ChangePositions(id);
     }
 
     public void ChangePositions(uint circleId)
     {
-        if (!Positions.circlePositions.ContainsKey(circleId)) return;
         Positions.circlePositions[circleId] += Velocities.velocities[circleId] * Time.deltaTime;
         controller.UpdateShapePosition(circleId, Positions.circlePositions[circleId]);
     }

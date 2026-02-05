@@ -1,15 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using UnityEditor.PackageManager.Requests;
-
 public class RegisterSystems
-{
+{  
     private static void AddSystemList(List<ISystem> list)
     {
-        list.Add(new CirclesManagement());
-
         // movement & physics
+        list.Add(new RegionManagement());
         list.Add(new PositionsManagement());
         list.Add(new CollisionDetection());
 
@@ -33,10 +28,14 @@ public class RegisterSystems
         list.Add(new ExplosionExecutionSystem());
 
         list.Add(new CircleDeleter());
+
+        list.Add(new SimStepCounter());
     }
     public static List<ISystem> GetListOfSystems()
     {
-        List<Config.ShapeConfig> config = ECSController.Instance.Config.circleInstancesToSpawn;
+        ECSController controller = ECSController.Instance;
+        
+        List<Config.ShapeConfig> config = controller.Config.circleInstancesToSpawn;
         // determine order of systems to add
 
         var toRegister = new List<ISystem>();
@@ -47,7 +46,8 @@ public class RegisterSystems
         {
             Positions.circlePositions.Add(i, config[(int)i].initialPosition);
             Velocities.velocities.Add(i, config[(int)i].initialVelocity);
-            Sizes.sizes.Add(i, config[(int)i].initialSize);
+            int size = config[(int)i].initialSize;
+            Sizes.sizes.Add(i, size);
             CollisionCount.collisionCount.Add(i, 0);
             if (Velocities.velocities[i].x == 0 && Velocities.velocities[i].y == 0)
             {
@@ -58,17 +58,10 @@ public class RegisterSystems
                 CollisionBehavior.behaviors.Add(i, Behavior.Dynamic);
             }
 
-            if (Positions.circlePositions[i].x < 0)
-            {
-                LeftSideCircles.circlesOnLeftSide.Add(i);
-            }
-            else
-            {
-                RightSideCircles.circlesOnRightSide.Add(i);
-            }
+            controller.CreateShape(i, size);
         }
-        AddSystemList(toRegister);
-
+        for (int i = 0; i < 4; i++)
+            AddSystemList(toRegister);
 
         return toRegister;
     }

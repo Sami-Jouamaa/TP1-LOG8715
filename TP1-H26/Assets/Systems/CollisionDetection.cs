@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 public class CollisionDetection : ISystem
 {
     public ECSController controller = ECSController.Instance;
 
     public string Name => "CollisionDetection";
-    static void Collide(uint a, int b)
+    static void Collide(uint a, uint b)
     {
-        List<int> list = CollisionPair.collisionPairs.ContainsKey(a) ? CollisionPair.collisionPairs[a] : new();
+        List<uint> list = CollisionPair.collisionPairs.ContainsKey(a) ? CollisionPair.collisionPairs[a] : new();
         if (!list.Contains(b))
             list.Add(b);
             CollisionPair.collisionPairs[a] = list;
@@ -16,7 +15,8 @@ public class CollisionDetection : ISystem
     public void UpdateSystem()
     {
         foreach (uint id in Positions.circlePositions.Keys)
-            DetectCollision(id);
+            if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
+                DetectCollision(id);
     }
 
     private static void DetectCollision(uint firstCircleId)
@@ -47,8 +47,8 @@ public class CollisionDetection : ISystem
             float radiiSum = Mathf.Pow(radius + ((float)Sizes.sizes[secondId] / 2), 2);
             if (xDifference + yDifference <= radiiSum)
             {
-                Collide(firstCircleId, (int)secondId);
-                Collide(secondId, (int)firstCircleId);
+                Collide(firstCircleId, secondId);
+                Collide(secondId, firstCircleId);
             }
         }
 

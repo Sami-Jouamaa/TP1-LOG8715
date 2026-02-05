@@ -6,7 +6,8 @@ public class ProtectionStartManagement : ISystem
     public void UpdateSystem()
     {
         foreach (uint id in Positions.circlePositions.Keys)
-            ProtectionManagement(id);
+            if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
+                ProtectionManagement(id);
     }
 
     public void ProtectionManagement(uint id)

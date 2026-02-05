@@ -9,33 +9,9 @@ public class ProtectionTickManagement : ISystem
 
     public void UpdateSystem()
     {
-        foreach (var leftSideId in LeftSideCircles.circlesOnLeftSide)
-        {
-            for (int fasterIteration = 0; fasterIteration < 4; fasterIteration++)
-            {
-                ProtectionTick(leftSideId);
-            }
-        }
-
-        foreach (var rightSideId in RightSideCircles.circlesOnRightSide)
-        {
-            ProtectionTick(rightSideId);
-        }
-
-        // foreach (var (id, protection) in Protections.protections.ToList())
-        // {
-        //     {
-        //         float newProtectionRemaining = Math.Max(protection.Remaining - Time.deltaTime, 0);
-        //         float newProtectionCooldown = Math.Max(protection.Cooldown - Time.deltaTime, 0);
-        //         if (newProtectionCooldown <= 0)
-        //         {
-        //             Protections.protections.Remove(id);
-        //             CollisionCount.collisionCount[id] = 0;
-        //         }
-        //         else
-        //             Protections.protections[id] = new ProtectionTimers { Remaining = newProtectionRemaining, Cooldown = newProtectionCooldown };
-        //     }
-        // }
+        foreach (uint id in Protections.protections.Keys.ToList())
+            if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
+                ProtectionTick(id);
     }
 
     public void ProtectionTick(uint id)

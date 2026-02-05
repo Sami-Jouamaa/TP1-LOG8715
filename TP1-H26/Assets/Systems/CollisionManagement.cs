@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class CollisionManagement : ISystem
 {
     public ECSController controller = ECSController.Instance;
@@ -10,10 +9,9 @@ public class CollisionManagement : ISystem
     {
         if (!CollisionPair.collisionPairs.ContainsKey(firstCircleId)) return;
 
-        foreach (int collider in CollisionPair.collisionPairs[firstCircleId])
+        foreach (uint secondCircle in CollisionPair.collisionPairs[firstCircleId])
         {
-            uint secondCircle = (uint)collider;
-            if (firstCircleId > collider)
+            if (firstCircleId > secondCircle)
                 continue;
             bool firstDynamic = CollisionBehavior.behaviors[firstCircleId] == Behavior.Dynamic;
             bool secondDynamic = CollisionBehavior.behaviors[secondCircle] == Behavior.Dynamic;
@@ -81,7 +79,8 @@ public class CollisionManagement : ISystem
     public void UpdateSystem()
     {
         foreach (uint id in CollisionPair.collisionPairs.Keys)
-            ApplyCollision(id);
+            if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
+                ApplyCollision(id);
         CollisionPair.collisionPairs.Clear();
     }
 }
