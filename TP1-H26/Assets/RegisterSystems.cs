@@ -28,8 +28,6 @@ public class RegisterSystems
         list.Add(new ExplosionDetectionSystem());
         list.Add(new ExplosionExecutionSystem());
 
-        list.Add(new CircleDeleter());
-
         list.Add(new SimStepCounter());
     }
     public static List<ISystem> GetListOfSystems()
@@ -50,6 +48,7 @@ public class RegisterSystems
             int size = config[(int)i].initialSize;
             Sizes.sizes.Add(i, size);
             CollisionCount.collisionCount.Add(i, 0);
+            LifeStates.lifeStates.Add(i, LifeState.Alive);
             if (Velocities.velocities[i].x == 0 && Velocities.velocities[i].y == 0)
             {
                 CollisionBehavior.behaviors.Add(i, Behavior.Static);

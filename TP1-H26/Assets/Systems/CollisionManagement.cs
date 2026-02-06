@@ -5,12 +5,25 @@ public class CollisionManagement : ISystem
 
     public string Name => "CollisionManagement";
 
+    public void UpdateSystem()
+    {
+        foreach (uint id in CollisionPair.collisionPairs.Keys)
+        {
+            if (LifeStates.lifeStates[id] == LifeState.Dead)
+                continue;
+            if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
+                ApplyCollision(id);
+        }
+        CollisionPair.collisionPairs.Clear();
+    }
     public void ApplyCollision(uint firstCircleId)
     {
         if (!CollisionPair.collisionPairs.ContainsKey(firstCircleId)) return;
 
         foreach (uint secondCircle in CollisionPair.collisionPairs[firstCircleId])
         {
+            if (LifeStates.lifeStates[secondCircle] == LifeState.Dead)
+                continue;
             if (firstCircleId > secondCircle)
                 continue;
             bool firstDynamic = CollisionBehavior.behaviors[firstCircleId] == Behavior.Dynamic;
@@ -81,11 +94,4 @@ public class CollisionManagement : ISystem
         }
     }
 
-    public void UpdateSystem()
-    {
-        foreach (uint id in CollisionPair.collisionPairs.Keys)
-            if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
-                ApplyCollision(id);
-        CollisionPair.collisionPairs.Clear();
-    }
 }

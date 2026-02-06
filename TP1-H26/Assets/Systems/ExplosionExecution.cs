@@ -10,7 +10,9 @@ public class ExplosionExecutionSystem : ISystem
 
     public void UpdateSystem()
     {
-        exploding = Explosion.explosions.Where(explosion => explosion.Value == ExplosionState.Exploding).Select(explosion => explosion.Key).ToList();
+        exploding = Explosion.explosions.Where(explosion => explosion.Value == ExplosionState.Exploding
+         && LifeStates.lifeStates[explosion.Key] != LifeState.Dead)
+         .Select(explosion => explosion.Key).ToList();
 
 
         foreach (uint id in exploding)
@@ -62,8 +64,9 @@ public class ExplosionExecutionSystem : ISystem
 
             controller.CreateShape(newCircle, newSize);
             Explosion.explosions.Add(newCircle, ExplosionState.Debris);
+            LifeStates.lifeStates.Add(newCircle, LifeState.Alive);
 
         }
-        DeadCircles.deadCircles.Add(circleId);
+        LifeStates.lifeStates[circleId] = LifeState.Dead;
     }
 }

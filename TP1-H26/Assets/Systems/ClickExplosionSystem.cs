@@ -14,6 +14,8 @@ public class ClickExplosionSystem : ISystem
 
         foreach (var (id, position) in Positions.circlePositions)
         {
+            if (LifeStates.lifeStates[id] == LifeState.Dead)
+                continue;
             float radius = Sizes.sizes[id] / 2f;
 
             if (Vector2.Distance(mouseWorld, position) <= radius)
@@ -31,7 +33,7 @@ public class ClickExplosionSystem : ISystem
         // small → disappear
         if (size < 4)
         {
-            DeadCircles.deadCircles.Add(id);
+            LifeStates.lifeStates[id] = LifeState.Dead;
             return;
         }
 

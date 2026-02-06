@@ -7,13 +7,17 @@ public class WallCollision : ISystem
     public void UpdateSystem()
     {
         foreach (var (id, wall) in WallHits.wallHits)
+        {
+            if (LifeStates.lifeStates[id] == LifeState.Dead)
+                continue;
             if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
                 WallBounce(id, wall);
+        }
         WallHits.wallHits.Clear();
             
     }
 
-    public void WallBounce(uint id, WallPos wall)
+    public static void WallBounce(uint id, WallPos wall)
     {
         float maxY = Camera.main.orthographicSize;
         float minY = -maxY;

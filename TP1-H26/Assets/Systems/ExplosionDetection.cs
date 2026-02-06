@@ -4,8 +4,12 @@ public class ExplosionDetectionSystem : ISystem
     public string Name => "ExplosionDetection"; public int ExplosionSize = ECSController.Instance.Config.explosionSize; 
     public void UpdateSystem() {
         foreach (uint id in Sizes.sizes.Keys)
+        {
+            if (LifeStates.lifeStates[id] == LifeState.Dead)
+                continue;
             if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left) 
                 ExplosionDetection(id); 
+        }
     } 
     public void ExplosionDetection(uint circleId) 
     { 

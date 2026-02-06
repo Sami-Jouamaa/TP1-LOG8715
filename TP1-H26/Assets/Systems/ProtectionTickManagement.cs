@@ -10,8 +10,12 @@ public class ProtectionTickManagement : ISystem
     public void UpdateSystem()
     {
         foreach (uint id in Protections.protections.Keys.ToList())
+        {
+            if (LifeStates.lifeStates[id] == LifeState.Dead)
+                continue;
             if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
                 ProtectionTick(id);
+        }
     }
 
     public void ProtectionTick(uint id)

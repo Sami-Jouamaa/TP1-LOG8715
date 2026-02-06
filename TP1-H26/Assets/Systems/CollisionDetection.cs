@@ -15,8 +15,12 @@ public class CollisionDetection : ISystem
     public void UpdateSystem()
     {
         foreach (uint id in Positions.circlePositions.Keys)
+        {
+            if (LifeStates.lifeStates[id] == LifeState.Dead)
+                continue;
             if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
                 DetectCollision(id);
+        }
     }
 
     private static void DetectCollision(uint firstCircleId)

@@ -8,9 +8,12 @@ public class PositionsManagement : ISystem
 
     public void UpdateSystem()
     {
-        foreach (uint id in Positions.circlePositions.Keys.ToList())
+        foreach (uint id in Positions.circlePositions.Keys.ToList()){
+            if (LifeStates.lifeStates[id] == LifeState.Dead)
+                continue;
             if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
                 ChangePositions(id);
+        }
     }
 
     public void ChangePositions(uint circleId)

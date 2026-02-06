@@ -1,3 +1,5 @@
+using System.Linq;
+
 public class SizeManagement : ISystem
 {
     public ECSController controller = ECSController.Instance;
@@ -5,14 +7,16 @@ public class SizeManagement : ISystem
 
     public void UpdateSystem()
     {
-        foreach (var (id, _) in Sizes.sizes)
+        foreach (uint id in Sizes.sizes.Keys.ToList())
             ManageSize(id);
     }
 
     public void ManageSize(uint circle)
     {
         if (Sizes.sizes[circle] <= 0)
-            DeadCircles.deadCircles.Add(circle);
+            LifeStates.lifeStates[circle] = LifeState.Dead;
+        if (LifeStates.lifeStates[circle] == LifeState.Dead)
+            Sizes.sizes[circle] = 0;
         controller.UpdateShapeSize(circle, Sizes.sizes[circle]);
     }
 }

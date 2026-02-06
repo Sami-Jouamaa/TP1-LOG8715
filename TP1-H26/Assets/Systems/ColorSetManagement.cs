@@ -5,9 +5,12 @@ public class ColorSetManagement : ISystem
     public void UpdateSystem()
     {
         foreach (uint id in Positions.circlePositions.Keys)
+        {
+            if (LifeStates.lifeStates[id] == LifeState.Dead)
+                continue;
             if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
                 ColorSet(id);
-
+        }
     }
 
     public void ColorSet(uint circleId)
