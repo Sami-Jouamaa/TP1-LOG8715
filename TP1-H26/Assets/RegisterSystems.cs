@@ -24,6 +24,7 @@ public class RegisterSystems
         list.Add(new SizeManagement());
 
         // explosion
+        list.Add(new ClickExplosionSystem());
         list.Add(new ExplosionDetectionSystem());
         list.Add(new ExplosionExecutionSystem());
 
