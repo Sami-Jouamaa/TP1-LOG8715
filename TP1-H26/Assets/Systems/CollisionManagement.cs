@@ -53,11 +53,6 @@ public class CollisionManagement : ISystem
                 }
                 continue;
             }
-            else
-            {
-                CollisionCount.collisionCount[firstCircleId] = 0;
-                CollisionCount.collisionCount[secondCircle] = 0;
-            }
             //sizes modulation
             uint smallerCircle = firstSize < secondSize ? firstCircleId : secondCircle;
             uint biggerCircle = firstSize < secondSize ? secondCircle : firstCircleId;
@@ -76,6 +71,11 @@ public class CollisionManagement : ISystem
                 {
                     Sizes.sizes[biggerCircle]++;
                     Sizes.sizes[smallerCircle]--;
+                    //reset collision count if smaller circle reaches protection collision count
+                    if (Sizes.sizes[smallerCircle] == (int)controller.Config.protectionCollisionCount)
+                    {
+                        CollisionCount.collisionCount[smallerCircle] = 0;
+                    }
                 }
             }
         }
