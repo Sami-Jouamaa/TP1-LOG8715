@@ -18,18 +18,21 @@ MonoBehaviour:
   protectionDuration: 5
   protectionCooldown: 15
   circleInstancesToSpawn:
-  - initialSize: 5
+  - initialSize: 6
     initialPosition: {x: 0, y: 0}
     initialVelocity: {x: 25, y: 0}
   - initialSize: 5
     initialPosition: {x: 10, y: 7}
     initialVelocity: {x: -6, y: 14}
-  - initialSize: 6
+  - initialSize: 5
     initialPosition: {x: 17, y: -8}
     initialVelocity: {x: 16, y: 3}
   - initialSize: 4
     initialPosition: {x: -9, y: 7}
     initialVelocity: {x: -8, y: 6}
+  - initialSize: 7
+    initialPosition: {x: -18, y: 10}
+    initialVelocity: {x: 15, y: 15}
   systemsEnabled:
     keys:
     - CirclesManagement
@@ -44,4 +47,7 @@ MonoBehaviour:
     - SizeManagement
     - ExplosionDetection
     - ExplosionExecution
-    values: 010101010101010101010101
+    - RegionManagement
+    - WallCollision
+    - SimStepCounter
+    values: 010101010101010101010101010101

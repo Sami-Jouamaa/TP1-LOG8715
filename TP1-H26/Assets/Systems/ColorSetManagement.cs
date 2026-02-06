@@ -14,6 +14,7 @@ public class ColorSetManagement : ISystem
     {
         Behavior behavior = CollisionBehavior.behaviors[circleId];
         bool isInCollision = CollisionPair.collisionPairs.ContainsKey(circleId) || WallHits.wallHits.ContainsKey(circleId);
+        int collisionCount = CollisionCount.collisionCount[circleId];
         int size = Sizes.sizes[circleId];
         bool isDebris = Explosion.explosions.ContainsKey(circleId) && Explosion.explosions[circleId] == ExplosionState.Debris;
 
@@ -23,7 +24,7 @@ public class ColorSetManagement : ISystem
             Colors.colors[circleId] = CircleColor.Green;
         else if (Protections.protections.ContainsKey(circleId))
             Colors.colors[circleId] = Protections.protections[circleId].Remaining > 0 ? CircleColor.White : CircleColor.Yellow;
-        else if (size < controller.Config.protectionSize)
+        else if (size < controller.Config.protectionSize && collisionCount == controller.Config.protectionCollisionCount - 1)
             Colors.colors[circleId] = CircleColor.LightBlue;
         else if (size == controller.Config.explosionSize - 1)
             Colors.colors[circleId] = CircleColor.Orange;

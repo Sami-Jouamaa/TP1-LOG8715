@@ -53,7 +53,12 @@ public class CollisionManagement : ISystem
                 }
                 continue;
             }
-            
+            else
+            {
+                CollisionCount.collisionCount[firstCircleId] = 0;
+                CollisionCount.collisionCount[secondCircle] = 0;
+            }
+            //sizes modulation
             uint smallerCircle = firstSize < secondSize ? firstCircleId : secondCircle;
             uint biggerCircle = firstSize < secondSize ? secondCircle : firstCircleId;
 
