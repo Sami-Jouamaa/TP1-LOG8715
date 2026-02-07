@@ -16,22 +16,20 @@ public class CollisionManagement : ISystem
         }
         CollisionPair.collisionPairs.Clear();
     }
-    public void ApplyCollision(uint firstCircleId)
+    public void ApplyCollision(uint firstCircle)
     {
-        if (!CollisionPair.collisionPairs.ContainsKey(firstCircleId)) return;
-
-        foreach (uint secondCircle in CollisionPair.collisionPairs[firstCircleId])
+        foreach (uint secondCircle in CollisionPair.collisionPairs[firstCircle])
         {
             if (LifeStates.lifeStates[secondCircle] == LifeState.Dead)
                 continue;
-            if (firstCircleId > secondCircle)
+            if (firstCircle > secondCircle)
                 continue;
-            bool firstDynamic = CollisionBehavior.behaviors[firstCircleId] == Behavior.Dynamic;
+            bool firstDynamic = CollisionBehavior.behaviors[firstCircle] == Behavior.Dynamic;
             bool secondDynamic = CollisionBehavior.behaviors[secondCircle] == Behavior.Dynamic;
             CollisionResult resultingPosVel = CollisionUtility.CalculateCollision(
-                Positions.circlePositions[firstCircleId],
-                Velocities.velocities[firstCircleId],
-                Sizes.sizes[firstCircleId],
+                Positions.circlePositions[firstCircle],
+                Velocities.velocities[firstCircle],
+                Sizes.sizes[firstCircle],
                 Positions.circlePositions[secondCircle],
                 Velocities.velocities[secondCircle],
                 Sizes.sizes[secondCircle]
@@ -44,8 +42,8 @@ public class CollisionManagement : ISystem
 
             if (firstDynamic)
             {
-                Positions.circlePositions[firstCircleId] = newPos1;
-                Velocities.velocities[firstCircleId] = newVel1;
+                Positions.circlePositions[firstCircle] = newPos1;
+                Velocities.velocities[firstCircle] = newVel1;
             }
             if (secondDynamic)
             {
@@ -55,43 +53,50 @@ public class CollisionManagement : ISystem
             if (!(firstDynamic && secondDynamic))
                 continue;
             
-            int firstSize = Sizes.sizes[firstCircleId];
+            int firstSize = Sizes.sizes[firstCircle];
             int secondSize = Sizes.sizes[secondCircle];
             if (firstSize == secondSize)
             {
                 if (firstSize <= controller.Config.protectionSize)
                 {
-                    CollisionCount.collisionCount[firstCircleId]++;
+                    CollisionCount.collisionCount[firstCircle]++;
                     CollisionCount.collisionCount[secondCircle]++;
                 }
-                continue;
             }
-            //sizes modulation
-            uint smallerCircle = firstSize < secondSize ? firstCircleId : secondCircle;
-            uint biggerCircle = firstSize < secondSize ? secondCircle : firstCircleId;
+            else
+                ModulateSizes(firstCircle, secondCircle);
+            
+        }
+    }
+    
+    public void ModulateSizes(uint firstCircle, uint secondCircle)
+    {
+        int firstSize = Sizes.sizes[firstCircle];
+        int secondSize = Sizes.sizes[secondCircle];
 
-            bool smallerIsProtected =
+        uint smallerCircle = firstSize < secondSize ? firstCircle : secondCircle;
+        uint biggerCircle = firstSize < secondSize ? secondCircle : firstCircle;
+
+        bool smallerIsProtected =
                 Protections.protections.ContainsKey(smallerCircle) && Protections.protections[smallerCircle].Remaining > 0;
 
-            bool biggerIsProtected =
-                Protections.protections.ContainsKey(biggerCircle) && Protections.protections[biggerCircle].Remaining > 0;
+        bool biggerIsProtected =
+            Protections.protections.ContainsKey(biggerCircle) && Protections.protections[biggerCircle].Remaining > 0;
 
-            if (!biggerIsProtected)
+        if (!biggerIsProtected)
+        {
+            if (smallerIsProtected)
+                Sizes.sizes[biggerCircle]--;
+            else
             {
-                if (smallerIsProtected)
-                    Sizes.sizes[biggerCircle]--;
-                else
+                Sizes.sizes[biggerCircle]++;
+                Sizes.sizes[smallerCircle]--;
+                //reset collision count if smaller circle reaches protection collision count
+                if (Sizes.sizes[smallerCircle] == (int)controller.Config.protectionCollisionCount)
                 {
-                    Sizes.sizes[biggerCircle]++;
-                    Sizes.sizes[smallerCircle]--;
-                    //reset collision count if smaller circle reaches protection collision count
-                    if (Sizes.sizes[smallerCircle] == (int)controller.Config.protectionCollisionCount)
-                    {
-                        CollisionCount.collisionCount[smallerCircle] = 0;
-                    }
+                    CollisionCount.collisionCount[smallerCircle] = 0;
                 }
             }
         }
     }
-
 }

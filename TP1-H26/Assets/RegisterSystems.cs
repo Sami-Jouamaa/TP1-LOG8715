@@ -20,13 +20,14 @@ public class RegisterSystems
         list.Add(new WallCollision());
         list.Add(new CollisionManagement());
 
-        // sets real size
-        list.Add(new SizeManagement());
 
         // explosion
         list.Add(new ClickExplosionSystem());
         list.Add(new ExplosionDetectionSystem());
         list.Add(new ExplosionExecutionSystem());
+
+        // sets real size
+        list.Add(new SizeManagement());
 
         list.Add(new SimStepCounter());
     }
@@ -62,7 +63,7 @@ public class RegisterSystems
         }
         for (int i = 0; i < 4; i++)
             AddSystemList(toRegister);
-
+        toRegister.Add(new SnapshotManagement());
         return toRegister;
     }
 

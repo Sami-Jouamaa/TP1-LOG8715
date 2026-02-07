@@ -14,16 +14,13 @@ public class ExplosionExecutionSystem : ISystem
          && LifeStates.lifeStates[explosion.Key] != LifeState.Dead)
          .Select(explosion => explosion.Key).ToList();
 
-
         foreach (uint id in exploding)
         {
             if (SimStep.currentSimStep == 0 || Regions.regions.TryGetValue(id, out var region) && region == CircleRegion.Left)
             {
                 ApplyExplosion(id);
             }
-                
         }
-            
         Explosion.explosions.Clear();
     }
 
@@ -43,28 +40,35 @@ public class ExplosionExecutionSystem : ISystem
             new Vector2(-1, -1)
         };
 
+        List<uint> freeIds = LifeStates.lifeStates.Keys.Where(id => LifeStates.lifeStates[id] == LifeState.Dead).ToList();
         foreach (Vector2 dir in diagonals)
         {
-            uint newCircle = Positions.circlePositions.Keys.Max() + 1;
+            uint newCircle;
+            if (freeIds.Count > 0)
+            {
+                newCircle = freeIds[0];
+                freeIds.RemoveAt(0);
+            }
+            else
+            {
+                newCircle = Positions.circlePositions.Keys.Max() + 1;
+                controller.CreateShape(newCircle, newSize);
+            }
+
             float offset = newSize * Mathf.Sqrt(2f);
 
-            Positions.circlePositions.Add(
-                newCircle,
-                position + dir.normalized * offset
-            );
-            Sizes.sizes.Add(newCircle, newSize);
+            Positions.circlePositions[newCircle] = position + dir.normalized * offset;
+            Sizes.sizes[newCircle] = newSize;
 
-            Velocities.velocities.Add(
-                newCircle,
-                dir.normalized * velocity.magnitude
-            );
+            Velocities.velocities[newCircle] = dir.normalized * velocity.magnitude;
 
-            CollisionCount.collisionCount.Add(newCircle, 0);
-            CollisionBehavior.behaviors.Add(newCircle, Behavior.Dynamic);
-
-            controller.CreateShape(newCircle, newSize);
-            Explosion.explosions.Add(newCircle, ExplosionState.Debris);
-            LifeStates.lifeStates.Add(newCircle, LifeState.Alive);
+            CollisionCount.collisionCount[newCircle] = 0;
+            CollisionBehavior.behaviors[newCircle] = Behavior.Dynamic;
+            Explosion.explosions[newCircle] = ExplosionState.Debris;
+            LifeStates.lifeStates[newCircle] = LifeState.Alive;
+            if (Protections.protections.ContainsKey(newCircle))
+                Protections.protections.Remove(newCircle);
+                
 
         }
         LifeStates.lifeStates[circleId] = LifeState.Dead;

@@ -35,16 +35,19 @@ public class CollisionDetection : ISystem
 
         if (firstPosition.x - radius <= minX)
             WallHits.wallHits.Add(firstCircleId, WallPos.Left);
-        if (firstPosition.x + radius >= maxX)
+        else if (firstPosition.x + radius >= maxX)
             WallHits.wallHits.Add(firstCircleId, WallPos.Right);
-        if (firstPosition.y - radius <= minY)
+        else if (firstPosition.y - radius <= minY)
             WallHits.wallHits.Add(firstCircleId, WallPos.Bottom);
-        if (firstPosition.y + radius >= maxY)
+        else if (firstPosition.y + radius >= maxY)
             WallHits.wallHits.Add(firstCircleId, WallPos.Top);
 
         foreach (var (secondId, secondPosition) in Positions.circlePositions)
         {
-            if (secondId <= firstCircleId) continue;
+            if (secondId <= firstCircleId)
+                continue;
+            if (LifeStates.lifeStates[secondId] == LifeState.Dead)
+                continue;
             // Collision with other circle
             float xDifference = Mathf.Pow(firstPosition.x - secondPosition.x, 2);
             float yDifference = Mathf.Pow(firstPosition.y - secondPosition.y, 2);
